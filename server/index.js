@@ -92,7 +92,6 @@ app.get("/", async (req, res) => {
             <div class="email-body">
               <p>Hello,</p>
               <p>Here is your personalized QR code. You can scan it with any QR code reader to access the URL:</p>
-              <p><strong>${url}</strong></p>
               <div class="qr-code">
                 <img src="cid:qrCode" alt="QR Code" />
               </div>
