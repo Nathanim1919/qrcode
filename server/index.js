@@ -6,11 +6,14 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 // Get the current directory using ES module syntax
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+dotenv.config();
 const app = express();
 app.use(
   cors({
@@ -49,8 +52,8 @@ app.get("/", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail', // Use your email service (e.g., Gmail, SendGrid, etc.)
       auth: {
-        user: 'your-email@gmail.com',
-        pass: 'your-email-password'
+        user: process.env.GMAIL,
+        pass: process.env.GOOGLE_PASSWORD
       }
     });
 
@@ -101,7 +104,7 @@ app.get("/", async (req, res) => {
 
     // Define email options
     const mailOptions = {
-      from: 'your-email@gmail.com',
+      from: process.env.GMAIL,
       to: email,
       subject: 'Your QR Code',
       html: emailContent,
