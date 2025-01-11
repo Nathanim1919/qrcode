@@ -21,7 +21,6 @@ export const generateQrCode = async (req, res) => {
 export const validateQrCode = async (req, res) => {
   try {
     const { qrcodeId } = req.query;
-    console.log("Counting how this end point is called");
 
 
     if (!qrcodeId) {
@@ -31,7 +30,7 @@ export const validateQrCode = async (req, res) => {
     }
 
     const response = await validateQrCodeService(qrcodeId);
-    return res.status(200).json({ success: true, message: response.message });
+    return res.status(200).json({ success: response.success, message: response.message });
   } catch (error) {
     let statusCode = 500;
     let errorMessage = error.message || "An unknown error occurred";

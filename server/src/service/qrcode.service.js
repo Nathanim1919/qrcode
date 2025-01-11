@@ -24,7 +24,7 @@ export const QrcodeGeneratorService = async (email) => {
 
     if (qrCodeDoc) {
       // Generate the URL for the QR code
-      const qrCodeUrl = `https://c82a62c44f7835.lhr.life/validateQrCode?qrcodeId=${qrCodeDoc._id}`;
+      const qrCodeUrl = `https://bd19cae805f383.lhr.life/validateQrCode?qrcodeId=${qrCodeDoc._id}`;
       console.log("Generated URL for QR Code:", qrCodeUrl);
 
       if (!process.env.BACKEND_BASE_URL) {
@@ -77,18 +77,17 @@ export const validateQrCodeService = async (qrCodeId) => {
     const qrCode = await QrCodeModel.findById(qrCodeId);
 
     if (!qrCode) {
-      throw {
-        status: 404,
-        message: "Invalid QR code, it does not exist",
-        errorCode: "QRCODE_NOT_FOUND",
-      };
+     return {
+       message: "QR code not found in the database",
+       success: false
+     }
     }
 
     if (qrCode.isUsed) {
-      throw {
-        status: 400,
-        message: "Invalid QR code, it has already been used",
-        errorCode: "QRCODE_ALREADY_USED",
+     return {
+       data: { qrCodeId: qrCode._id },
+       message: "QR code already used and cannot be verified again",
+       success: false
       };
     }
 
@@ -98,10 +97,10 @@ export const validateQrCodeService = async (qrCodeId) => {
 
     return {
       data: { qrCodeId: qrCode._id },
-      message: "Successfully scanned! You are good to go!",
+      message: "Congratulations! Your QR code is verified and ready to use.",
+      success: true,
     };
   } catch (error) {
-    console.error("Error in validateQrCodeService:", error);
     throw {
       status: error.status || 500,
       message:

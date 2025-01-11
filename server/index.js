@@ -9,14 +9,14 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "https://c82a62c44f7835.lhr.life",
+    origin: "https://bd19cae805f383.lhr.life",
     methods: ["POST", "GET", "PUT", "PUCH"],
   })
 );
 
 // connect db
 mongoose
-  .connect("mongodb://localhost:27017/QRCode")
+  .connect("mongodb+srv://finance:finance@cluster0.vxomzcr.mongodb.net/qrcode?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => {
     console.log("DB connected");
   })
