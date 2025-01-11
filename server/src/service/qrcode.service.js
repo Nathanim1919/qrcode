@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { sendEmail } from "./email.service.js";
+import mongoose from "mongoose";
 
 // Get the current directory using ES module syntax
 const __filename = fileURLToPath(import.meta.url);
@@ -17,9 +18,9 @@ export const QrcodeGeneratorService = async (email) => {
 
     // Create a new QR code document in the database
     const qrCodeDoc = await QrCodeModel.create({
-        url:"link"
+      url: "link",
     });
-    console.log(qrCodeDoc)
+    console.log(qrCodeDoc);
 
     if (qrCodeDoc) {
       // Generate the URL for the QR code
@@ -54,7 +55,9 @@ export const QrcodeGeneratorService = async (email) => {
         return qrCodeBase64;
       } catch (qrCodeError) {
         console.error("Error generating QR Code:", qrCodeError);
-        throw new Error("Failed to generate the QR code. Please try again later.");
+        throw new Error(
+          "Failed to generate the QR code. Please try again later."
+        );
       }
     } else {
       throw new Error("Unable to create QR code document.");
@@ -67,18 +70,43 @@ export const QrcodeGeneratorService = async (email) => {
 
 export const validateQrCodeService = async (qrCodeId) => {
   try {
+    // Validate qrcodeId
+    if (!mongoose.Types.ObjectId.isValid(qrCodeId)) {
+      throw new Error("Invalid QR Code ID format");
+    }
     const qrCode = await QrCodeModel.findById(qrCodeId);
 
-    if (!qrCode) throw new Error("QR Code not found");
+    if (!qrCode) {
+      throw {
+        status: 404,
+        message: "Invalid QR code, it does not exist",
+        errorCode: "QRCODE_NOT_FOUND",
+      };
+    }
 
-    if (qrCode.isUsed) throw new Error("Invalid QR code, it has already been used!");
+    if (qrCode.isUsed) {
+      throw {
+        status: 400,
+        message: "Invalid QR code, it has already been used",
+        errorCode: "QRCODE_ALREADY_USED",
+      };
+    }
 
+    // Mark the QR code as used
     qrCode.isUsed = true;
     await qrCode.save();
 
-    return "Successfully scanned! You are good to go!";
+    return {
+      data: { qrCodeId: qrCode._id },
+      message: "Successfully scanned! You are good to go!",
+    };
   } catch (error) {
     console.error("Error in validateQrCodeService:", error);
-    throw new Error("Unable to validate, please try again later.");
+    throw {
+      status: error.status || 500,
+      message:
+        error.message || "An error occurred while validating the QR code",
+      errorCode: error.errorCode || "VALIDATION_ERROR",
+    };
   }
 };

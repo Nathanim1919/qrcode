@@ -1,4 +1,7 @@
-import { QrcodeGeneratorService, validateQrCodeService } from "../service/qrcode.service.js";
+import {
+  QrcodeGeneratorService,
+  validateQrCodeService,
+} from "../service/qrcode.service.js";
 
 export const generateQrCode = async (req, res) => {
   console.log("Qury Parameters are: ", req.query);
@@ -9,7 +12,7 @@ export const generateQrCode = async (req, res) => {
       .status(200)
       .json({ response, message: "QR code generated successfully" });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: "Failed to generate QR code", error });
   }
 };
@@ -17,19 +20,29 @@ export const generateQrCode = async (req, res) => {
 export const validateQrCode = async (req, res) => {
   try {
     const { qrcodeId } = req.query;
-    console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",qrcodeId)
 
     if (!qrcodeId) {
-      res.status(400).json({ message: "qrcodeId is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "qrcodeId is required" });
     }
 
     const response = await validateQrCodeService(qrcodeId);
-    res.status(200).json({
-      response,
-      message: "Response retreived successfully",
-    });
+    return res.status(200).json({ success: true, message: response.message });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: "Failed to validate the qrcode", error });
+    let statusCode = 500;
+    let errorMessage = error.message || "An unknown error occurred";
+
+    if (errorMessage.includes("Invalid QR Code ID format")) {
+      statusCode = 400;
+    } else if (errorMessage.includes("QR Code not found")) {
+      statusCode = 404;
+    } else if (errorMessage.includes("QR Code already used")) {
+      statusCode = 400;
+    }
+
+    return res
+      .status(statusCode)
+      .json({ success: false, message: errorMessage });
   }
 };
