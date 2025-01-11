@@ -1,7 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../styles/validationCard.css";
+import { FaCircleCheck } from "react-icons/fa6";
+import { CgCloseO } from "react-icons/cg";
 
 interface IResponse {
   message: string;
@@ -11,67 +13,64 @@ interface IResponse {
 export const ValidateQrCode = () => {
   const [searchParams] = useSearchParams();
   const qrcodeId = searchParams.get("qrcodeId");
-  const [isCalled, setIsCalled] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
-  // State variables
   const [headerText, setHeaderText] = useState<string>(
-    "We are validating your QR code"
+    ""
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const [validationResult, setValidationResult] = useState<
-    "success" | "failure" | null
-  >(null);
 
-  // Function to validate QR code
+  // To prevent duplicate requests
+  const hasValidated = useRef(false);
+
   const handleValidation = async () => {
     if (!qrcodeId) {
       setHeaderText("QR code is invalid or missing.");
-      setValidationResult("failure");
       setLoading(false);
+      setSuccess(false);
       return;
     }
 
+    if (hasValidated.current) return; // Prevent duplicate validation
+    hasValidated.current = true;
+
     setLoading(true);
-    setValidationResult(null);
 
     try {
-      const { data }: { data: IResponse } = await axios.get(
-        `https://12378be28cd946.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
-      );
-
-      if (data.success) {
-        setHeaderText(data.message);
-        setValidationResult("success");
-      } else {
-        setHeaderText("Validation failed. Please try again.");
-        setValidationResult("failure");
-      }
+      const { data }: { data: IResponse } =
+        await axios.get(
+          `https://a3904b26e6d9b4.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
+        );
+      setHeaderText(data.message);
+      setSuccess(data.success);
     } catch (error) {
-      console.error("Error during validation:", error);
+      setSuccess(false);
       setHeaderText("Failed to validate the QR code. Please try again.");
-      setValidationResult("failure");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!isCalled) {
-      setIsCalled(true);
-      handleValidation();
-    }
-  }, []); // Dependency array is empty to ensure the function runs once on mount.
+    handleValidation();
+  }, []);
 
   return (
     <div className="container">
-      <div className="card">
-        <h1>{headerText}</h1>
-        {loading && <div className="loader">Validating...</div>}
-        {!loading && validationResult === "success" && (
-          <div className="success-message">🎉 Validation Successful!</div>
-        )}
-        {!loading && validationResult === "failure" && (
-          <div className="failure-message">⚠️ Validation Failed!</div>
+      <div className={`card ${success ? "success" : "error"}`}>
+        {loading ? (
+          <div className="loader">Validating...</div>
+        ) : (
+          <div className="success-message">
+            <div className="iconBox">
+              {success ? (
+                <FaCircleCheck className="icon" />
+              ) : (
+                <CgCloseO className="icon" />
+              )}
+            </div>
+            <h1>{headerText}</h1>
+          </div>
         )}
       </div>
     </div>
