@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://c82a62c44f7835.lhr.life",
     methods: ["POST", "GET", "PUT", "PUCH"],
   })
 );

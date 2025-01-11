@@ -17,9 +17,12 @@ export const generateQrCode = async (req, res) => {
   }
 };
 
+
 export const validateQrCode = async (req, res) => {
   try {
     const { qrcodeId } = req.query;
+    console.log("Counting how this end point is called");
+
 
     if (!qrcodeId) {
       return res
