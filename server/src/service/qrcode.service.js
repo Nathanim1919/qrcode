@@ -27,3 +27,21 @@ export const QrcodeGeneratorService = async (email) => {
     throw new Error("Got unknown error while generating the qrcode", error);
   }
 };
+
+
+export const validateQrCodeService = async (qrCodeId) => {
+    try {
+        const qrCode = await QrCodeModel.findById(qrCodeId);
+
+        if (!qrCode) throw new Error("QrCode is Not found")
+
+        if (qrCode.iUsed) throw new Error("Invalid QrCode, QrCode is already used!!")
+
+        qrCode.iUsed = true;
+        await qrCode.save();
+
+        return "successfully scanned! you are good to go!"
+    } catch (error) {
+        throw new Error("Unable to validate, please try again later!!")
+    }
+}
