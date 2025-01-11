@@ -4,6 +4,7 @@ const QrCodeSchema = new Schema({
   url: {
     type: String,
     required: true,
+    default:""
   },
   date: {
     type: Date,
