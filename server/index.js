@@ -1,11 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
-import QrCodeRoute from "./src/route/qrCode.route"
+import qrCodeRoute from './src/route/qrCode.route.js'
 
-
-dotenv.config();
 const app = express();
 app.use(
   cors({
@@ -14,7 +11,7 @@ app.use(
   })
 );
 
-// Connect to MongoDB
+// connect db
 mongoose
   .connect("mongodb://localhost:27017/QRCode")
   .then(() => {
@@ -24,7 +21,8 @@ mongoose
     console.log(err);
   });
 
-app.use("/", QrCodeRoute)
+
+app.use("/", qrCodeRoute);
 
 app.listen(3000, () => {
   console.log("App is listening on port 3000");

@@ -1,4 +1,4 @@
-import { QrcodeGeneratorService } from "../service/qrcode.service";
+import { QrcodeGeneratorService } from "../service/qrcode.service.js";
 
 export const generateQrCode = async (req, res) => {
   try {

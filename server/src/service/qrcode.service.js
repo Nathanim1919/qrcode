@@ -1,5 +1,15 @@
 import QrCode from "qrcode";
-import QrCodeModel from "../model/QrCode.model";
+import QrCodeModel from "../model/QrCode.model.js";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { sendEmail } from "./email.service.js";
+import { url } from "inspector";
+
+
+// Get the current directory using ES module syntax
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const QrcodeGeneratorService = async (email) => {
   try {
@@ -18,6 +28,19 @@ export const QrcodeGeneratorService = async (email) => {
         `/qrcode/validate?qrcodeId=${qrCodeDoc._id}`;
       console.log(url);
       const qrcode = await QrCode.toData(url);
+
+       // Extract the base64 string (remove the prefix "data:image/png;base64,")
+    const base64Data = qrCodeBase64.replace(/^data:image\/png;base64,/, '');
+
+    // Define the file path to save the image
+    const filePath = path.join(__dirname, 'qrcode.png');
+
+    // Write the base64 data to a file
+    fs.writeFileSync(filePath, base64Data, 'base64');
+
+      // send email
+      sendEmail(email, url, filePath);
+
 
       return qrcode;
     }
