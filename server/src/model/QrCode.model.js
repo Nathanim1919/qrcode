@@ -5,10 +5,6 @@ const QrCodeSchema = new Schema({
     type: String,
     required: true,
   },
-  qrCode: {
-    type: String,
-    required: true,
-  },
   date: {
     type: Date,
     default: Date.now,
@@ -19,5 +15,5 @@ const QrCodeSchema = new Schema({
   },
 });
 
-const QrCode = mongoose.model("QrCode", QrCodeSchema);
-export default QrCode;
+const QrCodeModel = mongoose.model("QrCode", QrCodeSchema);
+export default QrCodeModel;
