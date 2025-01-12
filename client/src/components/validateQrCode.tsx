@@ -2,8 +2,12 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "../styles/validationCard.css";
-import { FaCircleCheck } from "react-icons/fa6";
-import { CgCloseO } from "react-icons/cg";
+import { FaCheck } from "react-icons/fa";
+import QrCodeImage from "../assets/qr.png"
+import { IoCloseSharp } from "react-icons/io5";
+import { ImSpinner2 } from "react-icons/im";
+
+
 
 interface IResponse {
   message: string;
@@ -39,7 +43,7 @@ export const ValidateQrCode = () => {
     try {
       const { data }: { data: IResponse } =
         await axios.get(
-          `https://a3904b26e6d9b4.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
+          `http://localhost:3000/qrcode/validate?qrcodeId=${qrcodeId}`
         );
       setHeaderText(data.message);
       setSuccess(data.success);
@@ -56,20 +60,41 @@ export const ValidateQrCode = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className={`card ${success ? "success" : "error"}`}>
+    <div className="container fixed w-screen h-screen bg-sky-300 grid place-items-center">
+      <div className={`w-[80%] md:w-[300px] bg-white p-6 shadow-2xl rounded-md`}>
         {loading ? (
-          <div className="loader">Validating...</div>
+          <div className="loader flex justify-center items-center gap-2">
+            <ImSpinner2 className="text-5xl animate-spin text-blue-500" />
+            Checking QR code...
+          </div>
         ) : (
           <div className="success-message">
-            <div className="iconBox">
-              {success ? (
-                <FaCircleCheck className="icon" />
-              ) : (
-                <CgCloseO className="icon" />
-              )}
-            </div>
-            <h1>{headerText}</h1>
+           <div className="relative w-full h-[60%]">
+            <img src={QrCodeImage} alt="QR Code" className="qrcode-image w-full h-full" />
+            <span className={`w-20 border-8 border-white h-20 text-4xl rounded-full grid place-items-center absolute bottom-4 text-whit right-4 text-white
+            ${success ? "bg-green-500" : "bg-red-500"}
+              `}>
+             {success ?<FaCheck/>:<IoCloseSharp/>
+              }
+            </span>
+           </div>
+            <div className="iconBox flex flex-col justify-center items-center my-4">
+              {success?<h1 className="text-3xl text-green-500 font-bold">SUCCESS</h1>
+              :<h1 className="text-3xl text-red-500 font-extrabold">ERROR</h1>}
+            <p
+              className={`text-center font-bold ${
+                success ? "text-green-400" : "text-red-400"
+              }`}
+              >{headerText}</p>
+              </div>
+          <button
+            onClick={handleValidation}
+            className={`w-full mt-4 p-2 rounded-md text-white font-bold ${
+              success ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+              {success ? "Thank You" : "Try Again"}
+          </button>
           </div>
         )}
       </div>
