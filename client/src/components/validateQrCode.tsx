@@ -7,8 +7,6 @@ import QrCodeImage from "../assets/qr.png"
 import { IoCloseSharp } from "react-icons/io5";
 import { ImSpinner2 } from "react-icons/im";
 
-
-
 interface IResponse {
   message: string;
   success: boolean;
@@ -42,8 +40,9 @@ export const ValidateQrCode = () => {
 
     try {
       const { data }: { data: IResponse } =
+
         await axios.get(
-          `http://localhost:3000/qrcode/validate?qrcodeId=${qrcodeId}`
+          `https://bb003096c0c80e.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
         );
       setHeaderText(data.message);
       setSuccess(data.success);
@@ -93,7 +92,7 @@ export const ValidateQrCode = () => {
               success ? "bg-green-500" : "bg-red-500"
             }`}
           >
-              {success ? "Thank You" : "Try Again"}
+              {success ? "Thank You!" : "Try Again"}
           </button>
           </div>
         )}
