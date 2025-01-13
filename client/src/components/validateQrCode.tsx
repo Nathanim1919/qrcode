@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "../styles/validationCard.css";
 import { FaCheck } from "react-icons/fa";
 import QrCodeImage from "../assets/qr.png"
@@ -14,6 +14,7 @@ interface IResponse {
 
 export const ValidateQrCode = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const qrcodeId = searchParams.get("qrcodeId");
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -42,7 +43,7 @@ export const ValidateQrCode = () => {
       const { data }: { data: IResponse } =
 
         await axios.get(
-          `https://bb003096c0c80e.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
+          `https://6e5446ccc3a4c7.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
         );
       setHeaderText(data.message);
       setSuccess(data.success);
@@ -51,6 +52,7 @@ export const ValidateQrCode = () => {
       setHeaderText("Failed to validate the QR code. Please try again.");
     } finally {
       setLoading(false);
+      // navigate(`/admin`);
     }
   };
 

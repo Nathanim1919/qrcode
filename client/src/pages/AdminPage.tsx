@@ -8,7 +8,6 @@ const AdminPage: React.FC = () => {
             name: "John Doe",
             email: "jone@gmail.com",
              phone: "0912345679",
-            phone: "0912345679"
         },
         {
             name: "Jane Doe",
