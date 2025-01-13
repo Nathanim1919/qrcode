@@ -1,15 +1,15 @@
 import { IoMdClose } from "react-icons/io";
 import { IQrcode } from "../interface/IQrcode";
-
+import axios from "axios";
 
 interface UserDetailCardProps {
   selectedUser: IUser | null;
-    showUserDetailCard: boolean;
-    setShowUserDetailCard: React.Dispatch<React.SetStateAction<boolean>>;
+  showUserDetailCard: boolean;
+  setShowUserDetailCard: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
 interface IUser {
+  _id: string;
   name: string;
   email: string;
   phone: string;
@@ -18,12 +18,59 @@ interface IUser {
   qrCode: IQrcode;
 }
 
-
 const UserDetailCard: React.FC<UserDetailCardProps> = ({
   selectedUser,
-    showUserDetailCard,
-    setShowUserDetailCard,
+  showUserDetailCard,
+  setShowUserDetailCard,
 }) => {
+  const handlePrintQrCode = () => {
+    const printContent = document.getElementById("qr-print-section");
+
+    if (printContent) {
+      const newWindow = window.open("", "", "width=800,height=600");
+      newWindow?.document.write("<html><head><title>Print QR Code</title>");
+      newWindow?.document.write(
+        `<style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+          }
+          .qr-container {
+            margin-bottom: 20px;
+          }
+          .qr-container img {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+          }
+          .unique-id {
+            font-size: 20px;
+            font-weight: bold;
+          }
+        </style>`
+      );
+      newWindow?.document.write("</head><body>");
+      newWindow?.document.write(printContent?.innerHTML || "");
+      newWindow?.document.write("</body></html>");
+      newWindow?.document.close();
+      newWindow?.print();
+    }
+  };
+
+  const handleGenerateQrCode = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/qrcode/generateQrCode",
+        {
+          userId: selectedUser?._id,
+        }
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (!showUserDetailCard) return null;
   return (
@@ -35,7 +82,10 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
           before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gray-800 before:rounded-br-full before:rounded-bl-full
           "
         >
-          <IoMdClose className="absolute top-4 right-4 text-2xl cursor-pointer" onClick={()=> setShowUserDetailCard(false)}/>
+          <IoMdClose
+            className="absolute top-4 right-4 text-2xl cursor-pointer"
+            onClick={() => setShowUserDetailCard(false)}
+          />
           <h2 className="text-xl font-bold text-white relative z-10">
             Nathanim Tadele
           </h2>
@@ -70,27 +120,51 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
           </div>
 
           {/* QR Code Section */}
-          {selectedUser?.qrCode?<div>
-            <h3 className="font-semibold text-lg mb-4 text-gray-700">
-              Your QR Code
-            </h3>
-            <div className="bg-gray-200 h-40 w-full rounded-lg flex items-center justify-center">
-              <p className="text-gray-500">QR Code Placeholder</p>
+          {selectedUser?.qrCode ? (
+            <div>
+              <h3 className="font-semibold text-lg mb-4 text-gray-700">
+                Your QR Code
+              </h3>
+              <div className="h-40 w-full rounded-lg flex items-center justify-center">
+                <img
+                  src={`data:image/png;base64, ${selectedUser.qrCode.code}`}
+                  alt="QR Code"
+                  className="h-48 w-48"
+                />
+              </div>
+              <h2 className="font-bold text-center">{selectedUser.uniqueId}</h2>
+              <button
+                onClick={handlePrintQrCode}
+                className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition"
+              >
+                Print QR Code
+              </button>
+
+              {/* Hidden print section */}
+              <div id="qr-print-section" className="hidden">
+                <div className="qr-container">
+                <img
+                  src={`data:image/png;base64, ${selectedUser.qrCode.code}`}
+                  alt="QR Code"
+                  className="h-48 w-48"
+                />
+                </div>
+                <div className="unique-id">{selectedUser.uniqueId}</div>
+              </div>
             </div>
-            <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition">
-              Print QR Code
-            </button>
-          </div>
-          :
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-gray-700">
-              No QR Code Found
-            </h3>
-            <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition">
-              Generate QR Code
-            </button>
-          </div>
-          }
+          ) : (
+            <div>
+              <h3 className="font-semibold text-lg mb-4 text-gray-700">
+                No QR Code Found
+              </h3>
+              <button
+                onClick={handleGenerateQrCode}
+                className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition"
+              >
+                Generate QR Code
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Attendance Section */}
