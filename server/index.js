@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "https://bd19cae805f383.lhr.life",
+    origin: process.env.BACKEND_BASE_URL,
     methods: ["POST", "GET", "PUT", "PUCH"],
   })
 );

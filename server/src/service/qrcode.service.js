@@ -24,7 +24,7 @@ export const QrcodeGeneratorService = async (email) => {
 
     if (qrCodeDoc) {
       // Generate the URL for the QR code
-      const qrCodeUrl = `https://bd19cae805f383.lhr.life/validateQrCode?qrcodeId=${qrCodeDoc._id}`;
+      const qrCodeUrl = `${process.env.BACKEND_BASE_URL}/validateQrCode?qrcodeId=${qrCodeDoc._id}`;
       console.log("Generated URL for QR Code:", qrCodeUrl);
 
       if (!process.env.BACKEND_BASE_URL) {
