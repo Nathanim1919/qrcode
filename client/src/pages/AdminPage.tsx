@@ -1,130 +1,165 @@
+import UserDetailCard from "../components/UserDetailCard";
+
 const AdminPage: React.FC = () => {
     const users = [
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679",
+            phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Jane Doe",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "John Doe",
-            email: "jone@gmail.com"
+            email: "jone@gmail.com",
+             phone: "0912345679"
         },
         {
             name: "Nathanim Tadele",
-            email: "jane@gmail.com"
+            email: "jane@gmail.com",
+             phone: "0912345679"
         },
 
     ]
     return (
-      <div className="min-h-screen bg-gray-100 p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
+      <div className="min-h-screen bg-white p-2 md:w-[100%] md:mx-auto max-h-screen overflow-hidden">
         {/* Header */}
+        <UserDetailCard/>
+        <div className="min-h-screen bg-white p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
         <div className="bg-white p-2 rounded-md mb-2">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-700">
@@ -163,17 +198,19 @@ const AdminPage: React.FC = () => {
                     <button type="submit">search</button>
                 </form>
             </div>
-            <div className="h-[65vh] overflow-y-auto">
+            <div className="h-[65vh] p-4 overflow-y-auto grid gap-1">
                 {
                     users.map(user => (
-                        <div className="flex justify-between items-center text-gray-500">
+                        <div className="flex border cursor-pointer hover:bg-gray-100 border-gray-200 p-1 justify-between items-center text-gray-500">
                             <p>{user.name}</p>
-                            <p>{user.email}</p>
-                            <button>View</button>
+                            <p className="hidden md:block">{user.email}</p>
+                            <p>{user.phone}</p>
+                            <button className="text-blue-500 border border-sky-400 px-1 rounded-md">View</button>
                         </div>
                     ))
                 }
             </div>
+        </div>
         </div>
       </div>
     );
