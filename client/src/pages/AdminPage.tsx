@@ -1,5 +1,6 @@
 import { useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
+import ScanningOption from "../components/ScanOption";
 
 const AdminPage: React.FC = () => {
     const users = [
@@ -160,6 +161,7 @@ const AdminPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-white p-2 md:w-[100%] md:mx-auto max-h-screen overflow-hidden">
         {/* Header */}
+        <ScanningOption/>
         <UserDetailCard setShowUserDetailCard={setShowUserDetailCard} showUserDetailCard={showUserDetailCard}/>
         <div className="min-h-screen bg-white p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
         <div className="bg-white p-2 rounded-md mb-2">
