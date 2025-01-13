@@ -1,13 +1,26 @@
 import { IoMdClose } from "react-icons/io";
+import { IQrcode } from "../interface/IQrcode";
 
 
 interface UserDetailCardProps {
+  selectedUser: IUser | null;
     showUserDetailCard: boolean;
     setShowUserDetailCard: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
+interface IUser {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  uniqueId: string;
+  qrCode: IQrcode;
+}
+
+
 const UserDetailCard: React.FC<UserDetailCardProps> = ({
+  selectedUser,
     showUserDetailCard,
     setShowUserDetailCard,
 }) => {
@@ -39,29 +52,25 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <p className="font-medium text-gray-600">Email:</p>
-                <p className="text-gray-700">nathanim@gmail.com</p>
+                <p className="text-gray-700">{selectedUser?.email}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-medium text-gray-600">Phone:</p>
-                <p className="text-gray-700">0912345679</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="font-medium text-gray-600">Role:</p>
-                <p className="text-gray-700">Admin</p>
+                <p className="text-gray-700">{selectedUser?.phone}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-medium text-gray-600">Address:</p>
-                <p className="text-gray-700">Addis Ababa</p>
+                <p className="text-gray-700">{selectedUser?.address}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-medium text-gray-600">Unique ID:</p>
-                <p className="text-gray-700">#wls384747</p>
+                <p className="text-gray-700">{selectedUser?.uniqueId}</p>
               </div>
             </div>
           </div>
 
           {/* QR Code Section */}
-          <div>
+          {selectedUser?.qrCode?<div>
             <h3 className="font-semibold text-lg mb-4 text-gray-700">
               Your QR Code
             </h3>
@@ -72,6 +81,16 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
               Print QR Code
             </button>
           </div>
+          :
+          <div>
+            <h3 className="font-semibold text-lg mb-4 text-gray-700">
+              No QR Code Found
+            </h3>
+            <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition">
+              Generate QR Code
+            </button>
+          </div>
+          }
         </div>
 
         {/* Attendance Section */}

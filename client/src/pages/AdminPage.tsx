@@ -1,167 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
 import ScanningOption from "../components/ScanOption";
+import axios from "axios";
+
+
+interface IUser {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    uniqueId: string;
+    qrCodeId: string;
+}
 
 const AdminPage: React.FC = () => {
-    const users = [
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679",
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Jane Doe",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "John Doe",
-            email: "jone@gmail.com",
-             phone: "0912345679"
-        },
-        {
-            name: "Nathanim Tadele",
-            email: "jane@gmail.com",
-             phone: "0912345679"
-        },
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-    ]
+
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get("http://localhost:3000/users");
+            const data = response.data;
+            setUsers(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+   
     const [showUserDetailCard, setShowUserDetailCard] = useState(false);
     return (
       <div className="min-h-screen bg-white p-2 md:w-[100%] md:mx-auto max-h-screen overflow-hidden">
         {/* Header */}
         <ScanningOption/>
-        <UserDetailCard setShowUserDetailCard={setShowUserDetailCard} showUserDetailCard={showUserDetailCard}/>
+        <UserDetailCard selectedUser={selectedUser} setShowUserDetailCard={setShowUserDetailCard} showUserDetailCard={showUserDetailCard}/>
         <div className="min-h-screen bg-white p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
         <div className="bg-white p-2 rounded-md mb-2">
           <div className="flex items-center justify-between">
@@ -209,7 +86,10 @@ const AdminPage: React.FC = () => {
                             <p className="hidden md:block">{user.email}</p>
                             <p>{user.phone}</p>
                             <button
-                                onClick={() => setShowUserDetailCard(true)}
+                                onClick={() => {
+                                    setSelectedUser(user)
+                                    setShowUserDetailCard(true)
+                                }}
                              className="text-blue-500 border border-sky-400 px-1 rounded-md">View</button>
                         </div>
                     ))
