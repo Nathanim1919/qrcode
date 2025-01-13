@@ -4,7 +4,7 @@ import { generateQrCode, validateQrCode } from "../controller/qrcode.controller.
 const route = Router();
 
 
-route.get("/generateQrCode", generateQrCode);
+route.post("/generateQrCode", generateQrCode);
 route.get("/qrcode/validate", validateQrCode);
 
 

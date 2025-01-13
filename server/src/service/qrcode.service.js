@@ -5,22 +5,22 @@ import { fileURLToPath } from "url";
 import { sendEmail } from "./email.service.js";
 import mongoose from "mongoose";
 import {QR} from "../model/QrCode.model.js";
-
+import User from "../model/User.model.js";
 // Get the current directory using ES module syntax
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const QrcodeGeneratorService = async (email) => {
+export const QrcodeGeneratorService = async (userId) => {
   try {
-    if (!email) {
-      throw new Error("Email not provided");
+    if (!userId) {
+      throw new Error("userId not provided");
     }
 
     // Create a new QR code document in the database
     const qrCodeDoc = await QR.create({
-      url: "link",
+      userId,
+      code: Math.random().toString(36).substring(2, 8).toUpperCase(),
     });
-    console.log(qrCodeDoc);
 
     if (qrCodeDoc) {
       // Generate the URL for the QR code
@@ -46,11 +46,20 @@ export const QrcodeGeneratorService = async (email) => {
         fs.writeFileSync(filePath, base64Data, "base64");
 
         // Save the URL to the QR code document
-        qrCodeDoc.url = qrCodeUrl;
+        qrCodeDoc.code = base64Data;
         await qrCodeDoc.save();
 
+        // get user
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        user.qrCode = qrCodeDoc._id;
+        await user.save();
+
         // Send email with the QR code and URL
-        await sendEmail(email, qrCodeUrl, filePath);
+        await sendEmail(user.email, qrCodeUrl, filePath);
 
         return qrCodeBase64;
       } catch (qrCodeError) {

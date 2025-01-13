@@ -28,7 +28,7 @@ mongoose
   });
 
 
-app.use("/", qrCodeRoute);
+app.use("/qrcode", qrCodeRoute);
 app.use("/users", userRoute);
 
 
