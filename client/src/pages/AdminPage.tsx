@@ -1,3 +1,4 @@
+import { useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
 
 const AdminPage: React.FC = () => {
@@ -155,10 +156,11 @@ const AdminPage: React.FC = () => {
         },
 
     ]
+    const [showUserDetailCard, setShowUserDetailCard] = useState(false);
     return (
       <div className="min-h-screen bg-white p-2 md:w-[100%] md:mx-auto max-h-screen overflow-hidden">
         {/* Header */}
-        <UserDetailCard/>
+        <UserDetailCard setShowUserDetailCard={setShowUserDetailCard} showUserDetailCard={showUserDetailCard}/>
         <div className="min-h-screen bg-white p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
         <div className="bg-white p-2 rounded-md mb-2">
           <div className="flex items-center justify-between">
@@ -205,7 +207,9 @@ const AdminPage: React.FC = () => {
                             <p>{user.name}</p>
                             <p className="hidden md:block">{user.email}</p>
                             <p>{user.phone}</p>
-                            <button className="text-blue-500 border border-sky-400 px-1 rounded-md">View</button>
+                            <button
+                                onClick={() => setShowUserDetailCard(true)}
+                             className="text-blue-500 border border-sky-400 px-1 rounded-md">View</button>
                         </div>
                     ))
                 }

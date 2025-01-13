@@ -1,13 +1,28 @@
-const UserDetailCard: React.FC = () => {
+import { IoMdClose } from "react-icons/io";
+
+
+interface UserDetailCardProps {
+    showUserDetailCard: boolean;
+    setShowUserDetailCard: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+const UserDetailCard: React.FC<UserDetailCardProps> = ({
+    showUserDetailCard,
+    setShowUserDetailCard,
+}) => {
+
+  if (!showUserDetailCard) return null;
   return (
     <div className="fixed top-0 left-0 grid place-items-center w-screen h-screen bg-black/40 backdrop-blur-sm">
       <div className="w-[90%] md:max-w-[700px] max-h-[95vh] bg-white rounded-lg shadow-lg overflow-y-auto">
         {/* Header Section */}
         <div
           className="text-white sticky top-0 p-8 flex flex-col items-center
-            before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gray-800 before:rounded-br-full before:rounded-bl-full
+          before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gray-800 before:rounded-br-full before:rounded-bl-full
           "
         >
+          <IoMdClose className="absolute top-4 right-4 text-2xl cursor-pointer" onClick={()=> setShowUserDetailCard(false)}/>
           <h2 className="text-xl font-bold text-white relative z-10">
             Nathanim Tadele
           </h2>
@@ -65,7 +80,7 @@ const UserDetailCard: React.FC = () => {
           <div className="space-y-6">
             {/* Attendance Day */}
             {["Jan 23", "Jan 24", "Jan 25"].map((day) => (
-              <div key={day}>
+              <div key={day} className="bg-gray-100 p-2">
                 <h4 className="font-medium text-gray-600 mb-2">{day}</h4>
                 <div className="flex justify-between">
                   <div className="flex-1 text-center">
