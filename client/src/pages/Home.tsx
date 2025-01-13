@@ -1,6 +1,6 @@
 const HomePage = () => {
     return (
-        <div>
+        <div className="w-screen h-screen grid place-items-center">
             <h1>Home Page</h1>
         </div>
     )
