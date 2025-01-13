@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import User from '../models/user';
 import { Attendance } from '../model/Attendance.model';
 
