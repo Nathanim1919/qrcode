@@ -1,20 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
-const QrCodeSchema = new Schema({
-  url: {
-    type: String,
-    required: true,
-    default:""
+const QRSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    code: { type: String, required: true },
+    isValid: { type: Boolean, default: true },
+    scanType: { type: String, enum: ["Event", "Meal"] },
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  isUsed: {
-    type: Boolean,
-    default: false,
-  },
-});
+  { timestamps: true }
+);
 
-const QrCodeModel = mongoose.model("QrCode", QrCodeSchema);
-export default QrCodeModel;
+export const QR = mongoose.model < IQR > ("QR", QRSchema);
