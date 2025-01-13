@@ -1,6 +1,129 @@
 const AdminPage: React.FC = () => {
+    const users = [
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Jane Doe",
+            email: "jane@gmail.com"
+        },
+        {
+            name: "John Doe",
+            email: "jone@gmail.com"
+        },
+        {
+            name: "Nathanim Tadele",
+            email: "jane@gmail.com"
+        },
+
+    ]
     return (
-      <div className="min-h-screen bg-gray-100 p-2 md:w-[70%] md:mx-auto">
+      <div className="min-h-screen bg-gray-100 p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
         {/* Header */}
         <div className="bg-white p-2 rounded-md mb-2">
           <div className="flex items-center justify-between">
@@ -32,6 +155,25 @@ const AdminPage: React.FC = () => {
             <h2 className="text-4xl font-bold text-red-600">444</h2>
             <p className="text-gray-500">Unscanned</p>
           </div>
+        </div>
+        <div className="bg-white mt-2">
+            <div className="flex justify-center items-center p-2 bg-white">
+                <form className="w-full">
+                    <input type="text" placeholder="write user name"/>
+                    <button type="submit">search</button>
+                </form>
+            </div>
+            <div className="h-[65vh] overflow-y-auto">
+                {
+                    users.map(user => (
+                        <div className="flex justify-between items-center text-gray-500">
+                            <p>{user.name}</p>
+                            <p>{user.email}</p>
+                            <button>View</button>
+                        </div>
+                    ))
+                }
+            </div>
         </div>
       </div>
     );
