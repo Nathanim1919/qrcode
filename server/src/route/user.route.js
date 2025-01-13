@@ -4,20 +4,24 @@ import {
   getUserById,
   updateUser,
   getUserAttendance,
-} from '../controllers/userController';
+  createUser
+} from '../controller/user.controller.js';
 
 const router = Router();
 
 // Get all users
-router.get('/users', getAllUsers);
+router.get('/', getAllUsers);
+
+// Create new user
+router.post('/', createUser);
 
 // Get user by ID
-router.get('/users/:id', getUserById);
+router.get('/:id', getUserById);
 
 // Update user
-router.put('/users/:id', updateUser);
+router.put('/:id', updateUser);
 
 // Get user's attendance
-router.get('/users/:id/attendance', getUserAttendance);
+router.get('/:id/attendance', getUserAttendance);
 
 export default router;

@@ -1,10 +1,10 @@
 import QrCode from "qrcode";
-import QrCodeModel from "../model/QrCode.model.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { sendEmail } from "./email.service.js";
 import mongoose from "mongoose";
+import {QR} from "../model/QrCode.model.js";
 
 // Get the current directory using ES module syntax
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +17,7 @@ export const QrcodeGeneratorService = async (email) => {
     }
 
     // Create a new QR code document in the database
-    const qrCodeDoc = await QrCodeModel.create({
+    const qrCodeDoc = await QR.create({
       url: "link",
     });
     console.log(qrCodeDoc);
@@ -74,7 +74,7 @@ export const validateQrCodeService = async (qrCodeId) => {
     if (!mongoose.Types.ObjectId.isValid(qrCodeId)) {
       throw new Error("Invalid QR Code ID format");
     }
-    const qrCode = await QrCodeModel.findById(qrCodeId);
+    const qrCode = await QR.findById(qrCodeId);
 
     if (!qrCode) {
      return {

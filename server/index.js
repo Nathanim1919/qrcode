@@ -2,11 +2,14 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import qrCodeRoute from './src/route/qrCode.route.js'
+import userRoute from "./src/route/user.route.js";
 import dotenv from 'dotenv'
 
 
 dotenv.config();
 const app = express();
+// Middleware to parse JSON
+app.use(express.json());
 app.use(
   cors({
     origin: process.env.BACKEND_BASE_URL,
@@ -26,6 +29,8 @@ mongoose
 
 
 app.use("/", qrCodeRoute);
+app.use("/users", userRoute);
+
 
 app.listen(3000, () => {
   console.log("App is listening on port 3000");
