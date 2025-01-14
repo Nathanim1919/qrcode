@@ -5,7 +5,7 @@ const route = Router();
 
 
 route.post("/generateQrCode", generateQrCode);
-route.get("/qrcode/validate", validateQrCode);
+route.get("/validate", validateQrCode);
 
 
 export default route;

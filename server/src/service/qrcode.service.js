@@ -118,10 +118,10 @@ export const QrcodeGeneratorService = async (userId) => {
 // };
 
 
-export const validateQrCodeForEvent = async (qrCodeId, userId, eventId, scanType) => {
+export const validateQrCodeForEvent = async (qrCodeId, scanType,scanTime, eventId) => {
   try {
     // Validate `qrCodeId`
-    if (!mongoose.Types.ObjectId.isValid(qrCodeId)) {
+    if (!mongoose.Types.ObjectId.isValid(qrCodeId) || !mongoose.Types.ObjectId.isValid(eventId)) {
       throw new Error("Invalid QR Code ID format");
     }
 
@@ -137,7 +137,6 @@ export const validateQrCodeForEvent = async (qrCodeId, userId, eventId, scanType
     // Check if QR code is already marked as used
     const existingAttendance = await Attendance.findOne({
       qrCodeId,
-      userId,
       eventId,
     });
 
@@ -157,24 +156,37 @@ export const validateQrCodeForEvent = async (qrCodeId, userId, eventId, scanType
       };
     }
 
+    
     // Validate the event date
-    const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
-    const eventDate = event.date.toISOString().split("T")[0];
+    const currentDate = new Date().toLocaleDateString("en-CA"); // Format: YYYY-MM-DD
+    const eventDate = new Date(event.date).toLocaleDateString("en-CA");
+  
+    console.log("currentDate", currentDate);
+    console.log("eventDate", eventDate);
+    
     if (currentDate !== eventDate) {
       return {
         message: "QR code is not valid for the current date",
         success: false,
       };
     }
+    
+    
 
+
+    console.log("event", event.time);
+    console.log("scanType", scanType);
     // Validate the event time
-    if (event.time !== scanType) {
+    if (event.type !== scanType) {
       return {
         message: `QR code is not valid for the current time slot (${scanType})`,
         success: false,
       };
     }
 
+
+    const {userId} = qrCode;
+    console.log("userId", userId);
     // Mark the QR code as used by creating an attendance record
     const attendanceRecord = new Attendance({
       userId,
@@ -191,6 +203,7 @@ export const validateQrCodeForEvent = async (qrCodeId, userId, eventId, scanType
       success: true,
     };
   } catch (error) {
+    console.log(error)
     throw {
       status: error.status || 500,
       message: error.message || "An error occurred while validating the QR code",

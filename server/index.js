@@ -13,8 +13,9 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.BACKEND_BASE_URL,
+    origin: ['http://localhost:5173', 'https://7fdc0466391ae8.lhr.life'], // Allow both
     methods: ["POST", "GET", "PUT", "PUCH"],
+
   })
 );
 
