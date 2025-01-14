@@ -1,6 +1,7 @@
 import { IoMdClose } from "react-icons/io";
 import { IQrcode } from "../interface/IQrcode";
 import axios from "axios";
+import { BASE_URL } from "../constants/config";
 
 interface UserDetailCardProps {
   selectedUser: IUser | null;
@@ -61,7 +62,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
   const handleGenerateQrCode = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/qrcode/generateQrCode",
+       `${BASE_URL}/qrcode/generateQrCode`,
         {
           userId: selectedUser?._id,
         }

@@ -6,6 +6,7 @@ import { FaCheck } from "react-icons/fa";
 import QrCodeImage from "../assets/qr.png"
 import { IoCloseSharp } from "react-icons/io5";
 import { ImSpinner2 } from "react-icons/im";
+import { BASE_URL } from "../constants/config";
 
 interface IResponse {
   message: string;
@@ -46,7 +47,7 @@ export const ValidateQrCode = () => {
       const { data }: { data: IResponse } =
 
         await axios.get(
-          `http://localhost:3000/qrcode/validate?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}&eventId=${eventId}`
+          `${BASE_URL}/qrcode/validate?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}&eventId=${eventId}`
         );
       setHeaderText(data.message);
       setSuccess(data.success);

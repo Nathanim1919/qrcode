@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
 import ScanningOption from "../components/ScanOption";
 import axios from "axios";
+import { BASE_URL } from "../constants/config";
 
 
 interface IUser {
@@ -20,7 +21,7 @@ const AdminPage: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/users");
+            const response = await axios.get(`${BASE_URL}/users`);
             const data = response.data;
             setUsers(data);
         } catch (error) {
