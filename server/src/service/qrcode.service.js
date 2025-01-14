@@ -6,6 +6,11 @@ import { sendEmail } from "./email.service.js";
 import mongoose from "mongoose";
 import {QR} from "../model/QrCode.model.js";
 import User from "../model/User.model.js";
+import {Attendance} from "../model/Attendance.model.js";
+import {Event} from "../model/Event.model.js";
+
+
+
 // Get the current directory using ES module syntax
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,43 +82,118 @@ export const QrcodeGeneratorService = async (userId) => {
   }
 };
 
-export const validateQrCodeService = async (qrCodeId, scanType) => {
+// export const validateQrCodeService = async (qrCodeId, scanType) => {
+//   try {
+//     // Validate qrcodeId
+//     if (!mongoose.Types.ObjectId.isValid(qrCodeId)) {
+//       throw new Error("Invalid QR Code ID format");
+//     }
+//     const qrCode = await QR.findById(qrCodeId);
+
+//     if (!qrCode) {
+//      return {
+//        message: "QR code not found in the database",
+//        success: false
+//      }
+//     }
+
+
+//     // Mark the QR code as used
+//     qrCode.isUsed = true;
+//     await qrCode.save();
+
+//     return {
+//       data: { qrCodeId: qrCode._id },
+//       message: "Congratulations! Your QR code is verified and ready to use.",
+//       success: true,
+//     };
+//   } catch (error) {
+//     throw {
+//       status: error.status || 500,
+//       message:
+//         error.message || "An error occurred while validating the QR code",
+//       errorCode: error.errorCode || "VALIDATION_ERROR",
+//     };
+//   }
+// };
+
+
+export const validateQrCodeForEvent = async (qrCodeId, userId, eventId, scanType) => {
   try {
-    // Validate qrcodeId
+    // Validate `qrCodeId`
     if (!mongoose.Types.ObjectId.isValid(qrCodeId)) {
       throw new Error("Invalid QR Code ID format");
     }
+
+    // Fetch the QR code details
     const qrCode = await QR.findById(qrCodeId);
-
     if (!qrCode) {
-     return {
-       message: "QR code not found in the database",
-       success: false
-     }
-    }
-
-    if (!qrCode.isValid) {
-     return {
-       data: { qrCodeId: qrCode._id },
-       message: "QR code already used and cannot be verified again",
-       success: false
+      return {
+        message: "QR code not found in the database",
+        success: false,
       };
     }
 
-    // Mark the QR code as used
-    qrCode.isUsed = true;
-    await qrCode.save();
+    // Check if QR code is already marked as used
+    const existingAttendance = await Attendance.findOne({
+      qrCodeId,
+      userId,
+      eventId,
+    });
 
+    if (existingAttendance) {
+      return {
+        message: "QR code has already been used for this event and user",
+        success: false,
+      };
+    }
+
+    // Fetch the event details
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return {
+        message: "Event not found",
+        success: false,
+      };
+    }
+
+    // Validate the event date
+    const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
+    const eventDate = event.date.toISOString().split("T")[0];
+    if (currentDate !== eventDate) {
+      return {
+        message: "QR code is not valid for the current date",
+        success: false,
+      };
+    }
+
+    // Validate the event time
+    if (event.time !== scanType) {
+      return {
+        message: `QR code is not valid for the current time slot (${scanType})`,
+        success: false,
+      };
+    }
+
+    // Mark the QR code as used by creating an attendance record
+    const attendanceRecord = new Attendance({
+      userId,
+      eventId,
+      qrCodeId,
+      scannedAt: new Date(),
+    });
+    await attendanceRecord.save();
+
+    // Return success response
     return {
-      data: { qrCodeId: qrCode._id },
-      message: "Congratulations! Your QR code is verified and ready to use.",
+      data: { qrCodeId: qrCode._id, eventId: event._id, userId },
+      message: "QR code is valid and attendance recorded successfully",
       success: true,
     };
   } catch (error) {
     throw {
       status: error.status || 500,
-      message:
-        error.message || "An error occurred while validating the QR code",
+      message: error.message || "An error occurred while validating the QR code",
       errorCode: error.errorCode || "VALIDATION_ERROR",
     };
   }

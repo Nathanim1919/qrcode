@@ -1,6 +1,6 @@
 import {
   QrcodeGeneratorService,
-  validateQrCodeService,
+  validateQrCodeForEvent,
 } from "../service/qrcode.service.js";
 
 export const generateQrCode = async (req, res) => {
@@ -28,7 +28,7 @@ export const validateQrCode = async (req, res) => {
         .json({ success: false, message: "qrcodeId is required" });
     }
 
-    const response = await validateQrCodeService(qrcodeId, scanType);
+    const response = await validateQrCodeForEvent(qrcodeId, scanType);
     return res.status(200).json({ success: response.success, message: response.message });
   } catch (error) {
     let statusCode = 500;

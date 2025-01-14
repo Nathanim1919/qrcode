@@ -6,7 +6,7 @@ export const createEvent = async (req, res) => {
     const { name, date, time, type } = req.body;
 
     // Validation (you can add more specific validation here)
-    if (!name || !date || !location) {
+    if (!name || !date || !time || !type) {
       return res.status(400).json({ message: 'Event name, date, and location are required.' });
     }
 
@@ -20,6 +20,7 @@ export const createEvent = async (req, res) => {
     const event = await newEvent.save();
     return res.status(201).json(event);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: 'Server error. Could not create event.' });
   }
 };
@@ -49,6 +50,27 @@ export const getAllEvents = async (req, res) => {
     return res.status(500).json({ message: 'Server error. Could not fetch events.' });
   }
 };
+
+
+export const getAllTodayEvents = async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0); // Midnight of today
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999); // End of today
+
+    const events = await Event.find({
+      date: { $gte: startOfDay, $lte: endOfDay }, // Match dates within today's range
+    });
+
+    return res.status(200).json(events);
+  } catch (error) {
+    console.error("Error fetching today's events:", error);
+    return res.status(500).json({ message: "Server error. Could not fetch events." });
+  }
+};
+
 
 // Update event details
 export const updateEvent = async (req, res) => {

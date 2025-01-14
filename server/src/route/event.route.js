@@ -5,23 +5,28 @@ import {
   getAllEvents,
   updateEvent,
   deleteEvent,
+  getAllTodayEvents
 } from "../controller/event.controller.js";
 
 const router = Router();
 
 // Create a new event
-router.post("/events", createEvent);
+router.post("/", createEvent);
+
+
+// get today events
+router.get("/today", getAllTodayEvents);
 
 // Get all events
-router.get("/events", getAllEvents);
+router.get("/", getAllEvents);
 
 // Get a single event by ID
-router.get("/events/:id", getEventById);
+router.get("/:id", getEventById);
 
 // Update event details
-router.put("/events/:id", updateEvent);
+router.put("/:id", updateEvent);
 
 // Delete an event
-router.delete("/events/:id", deleteEvent);
+router.delete("/:id", deleteEvent);
 
 export default router;
