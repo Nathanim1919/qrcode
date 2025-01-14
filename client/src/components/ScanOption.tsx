@@ -19,8 +19,8 @@ const formattedFullDate = today.toLocaleDateString("en-US", {
   year: "numeric",
 });
 
-  const handleChooseOption = (scanTime: string, scanType:string) => {
-    navigate(`/validateQrCode?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}`);
+  const handleChooseOption = (scanTime: string, scanType:string, eventId:string) => {
+    navigate(`/validateQrCode?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}&eventId=${eventId}`);
   };
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const formattedFullDate = today.toLocaleDateString("en-US", {
         {/* Morning Event Scan */}
         {events.length > 0 && events.map((event:IEvent) => (
           <button
-          onClick={() => handleChooseOption(event.time, event.type)}
+          onClick={() => handleChooseOption(event.time, event.type, event._id)}
           className="border border-gray-100 scanning-option-card bg-gradient-to-r from-blue-700 to-sky-500 hover:from-blue-800 hover:to-sky-600 text-center p-6 rounded-lg shadow-lg"
         >
           <h2 className="text-xl font-semibold">{event.time} {event.type} Scan</h2>

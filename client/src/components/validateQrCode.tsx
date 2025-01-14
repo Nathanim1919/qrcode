@@ -17,6 +17,7 @@ export const ValidateQrCode = () => {
   const qrcodeId = searchParams.get("qrcodeId");
   const scanTime = searchParams.get("scanTime");
   const scanType = searchParams.get("scanType");
+  const eventId = searchParams.get("eventId");
 
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -45,7 +46,7 @@ export const ValidateQrCode = () => {
       const { data }: { data: IResponse } =
 
         await axios.get(
-          `http://localhost:3000/qrcode/validate?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}`
+          `http://localhost:3000/qrcode/validate?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}&eventId=${eventId}`
         );
       setHeaderText(data.message);
       setSuccess(data.success);
