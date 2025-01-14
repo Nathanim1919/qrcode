@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import "../styles/validationCard.css";
 import { FaCheck } from "react-icons/fa";
 import QrCodeImage from "../assets/qr.png"
@@ -14,8 +14,10 @@ interface IResponse {
 
 export const ValidateQrCode = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const qrcodeId = searchParams.get("qrcodeId");
+  const scanTime = searchParams.get("scanTime");
+  const scanType = searchParams.get("scanType");
+
   const [success, setSuccess] = useState<boolean>(false);
 
   const [headerText, setHeaderText] = useState<string>(
@@ -43,7 +45,7 @@ export const ValidateQrCode = () => {
       const { data }: { data: IResponse } =
 
         await axios.get(
-          `https://6e5446ccc3a4c7.lhr.life/qrcode/validate?qrcodeId=${qrcodeId}`
+          `http://localhost:3000/qrcode/validate?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}`
         );
       setHeaderText(data.message);
       setSuccess(data.success);
