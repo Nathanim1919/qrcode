@@ -1,9 +1,9 @@
-import Event from '../models/event'; // Assuming you have an Event model
+import {Event} from '../model/Event.model.js';
 
 // Create a new event
 export const createEvent = async (req, res) => {
   try {
-    const { name, date, location, description } = req.body;
+    const { name, date, time, type } = req.body;
 
     // Validation (you can add more specific validation here)
     if (!name || !date || !location) {
@@ -13,8 +13,8 @@ export const createEvent = async (req, res) => {
     const newEvent = new Event({
       name,
       date,
-      location,
-      description,
+      time,
+      type,
     });
 
     const event = await newEvent.save();

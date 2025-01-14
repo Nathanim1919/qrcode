@@ -77,7 +77,7 @@ export const QrcodeGeneratorService = async (userId) => {
   }
 };
 
-export const validateQrCodeService = async (qrCodeId) => {
+export const validateQrCodeService = async (qrCodeId, scanType) => {
   try {
     // Validate qrcodeId
     if (!mongoose.Types.ObjectId.isValid(qrCodeId)) {
@@ -92,7 +92,7 @@ export const validateQrCodeService = async (qrCodeId) => {
      }
     }
 
-    if (qrCode.isUsed) {
+    if (!qrCode.isValid) {
      return {
        data: { qrCodeId: qrCode._id },
        message: "QR code already used and cannot be verified again",

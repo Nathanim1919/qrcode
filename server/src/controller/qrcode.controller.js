@@ -19,7 +19,7 @@ export const generateQrCode = async (req, res) => {
 
 export const validateQrCode = async (req, res) => {
   try {
-    const { qrcodeId } = req.query;
+    const { qrcodeId, scanType } = req.query;
 
 
     if (!qrcodeId) {
@@ -28,7 +28,7 @@ export const validateQrCode = async (req, res) => {
         .json({ success: false, message: "qrcodeId is required" });
     }
 
-    const response = await validateQrCodeService(qrcodeId);
+    const response = await validateQrCodeService(qrcodeId, scanType);
     return res.status(200).json({ success: response.success, message: response.message });
   } catch (error) {
     let statusCode = 500;

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import qrCodeRoute from './src/route/qrCode.route.js'
 import userRoute from "./src/route/user.route.js";
+import evenRoute from "./src/route/event.route.js";
 import dotenv from 'dotenv'
 
 
@@ -30,6 +31,7 @@ mongoose
 
 app.use("/qrcode", qrCodeRoute);
 app.use("/users", userRoute);
+app.use("/events", evenRoute);
 
 
 app.listen(3000, () => {
