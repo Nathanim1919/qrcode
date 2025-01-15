@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../constants/config";
 import { IoMdClose } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 
 export const EventPage: React.FC = () => {
@@ -81,7 +82,7 @@ export const EventPage: React.FC = () => {
         </form>
       </div>}
       <div className="w-[80%] sticky top-0 bg-white mx-auto p-4 flex justify-between items-center">
-        <h1>Event Page</h1>
+        <Link to={'/admin'}>Back</Link>
         <button 
             className="bg-sky-300 p-2 rounded-md"
         onClick={
@@ -93,10 +94,10 @@ export const EventPage: React.FC = () => {
         <div className="w-[80%] flex flex-wrap items-center gap-2 justify-center mx-auto">
             {
                 availableEvents.map((event) => (
-                    <div key={event._id} className="bg-sky-300 p-2">
-                        <p>{event.name}</p>
-                        <p>{event.date}</p>
-                        <p>{event.time}</p>
+                    <div key={event._id} className="bg-gray-300 p-2 flex flex-col items-center">
+                        <p className="font-bold">{event.name}</p>
+                        <p className="text-gray-500 text-[13px]">{event.date}</p>
+                        <p className="">{event.time}</p>
                         <p>{event.type}</p>
                     </div>
                 ))
