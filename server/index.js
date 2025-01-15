@@ -5,6 +5,7 @@ import qrCodeRoute from './src/route/qrCode.route.js'
 import userRoute from "./src/route/user.route.js";
 import evenRoute from "./src/route/event.route.js";
 import attendanceRoute from "./src/route/attendance.route.js";
+import authRoute from "./src/route/auth.route.js";
 import dotenv from 'dotenv'
 
 
@@ -29,7 +30,7 @@ mongoose
     console.log(err);
   });
 
-
+app.use("/auth", authRoute);
 app.use("/qrcode", qrCodeRoute);
 app.use("/users", userRoute);
 app.use("/events", evenRoute);

@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 import { sendError, sendSuccess } from "../utils/ApiResponse.util";
 
-class AuthController {
-  async loginUser(req, res) {
+  export const loginUser = async(req, res) => {
     try {
       const { email, password } = req.body;
 
@@ -45,6 +44,3 @@ class AuthController {
       });
     }
   }
-}
-
-export default AuthController;
