@@ -64,7 +64,9 @@ export const getAllTodayEvents = async (req, res) => {
       date: { $gte: startOfDay, $lte: endOfDay }, // Match dates within today's range
     });
 
-    return res.status(200).json(events);
+    return res.status(200).json(
+      {data:events, message: "Today's events fetched successfully.", success: true}
+    );
   } catch (error) {
     console.error("Error fetching today's events:", error);
     return res.status(500).json({ message: "Server error. Could not fetch events." });

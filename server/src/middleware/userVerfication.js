@@ -1,22 +1,24 @@
 import jwt from "jsonwebtoken";
-import { sendError } from "../utils/ApiResponse.util";
 
 const authenticateUser = async (req, res, next) => {
   try {
     // Get the access token from cookies
     const token = req.cookies.accessToken;
 
+    console.log("Access token:", token);
+
     if (!token) {
-      sendError(res, "Unauthorized access", "UNAUTHORIZED", 401);
+      res.status(401).json({ message: "Unauthorized access" });
       return;
     }
 
     // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded);
 
     // Ensure the token contains the required fields
     if (!decoded || !decoded.email || decoded.role !== "admin") {
-      sendError(res, "Unauthorized access", "UNAUTHORIZED", 401);
+      res.status(401).json({ message: "Unauthorized access" });
       return;
     }
 
@@ -26,9 +28,8 @@ const authenticateUser = async (req, res, next) => {
 
     next(); // Proceed to the next middleware or route handler
   } catch (error) {
-    sendError(res, "Invalid or expired token", "INVALID_TOKEN", 401, {
-      stack: error.message,
-    });
+    console.error("Error in authenticateUser:", error);
+    res.status(401).json({ message: "Unauthorized access" });
   }
 };
 

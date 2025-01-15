@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import qrCodeRoute from './src/route/qrCode.route.js'
 import userRoute from "./src/route/user.route.js";
@@ -13,12 +14,16 @@ dotenv.config();
 const app = express();
 // Middleware to parse JSON
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:5173',"https://3c46ddc76dd116.lhr.life"], // Allow both
+    origin: ['http://localhost:5173'],
+    credentials: true, // Allow sending cookies
     methods: ["POST", "GET", "PUT", "PUCH"],
   })
 );
+
+
 
 // connect db
 mongoose

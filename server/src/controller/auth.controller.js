@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { sendError, sendSuccess } from "../utils/ApiResponse.util";
+// import { sendError, sendSuccess } from "../utils/ApiResponse.util";
 
   export const loginUser = async(req, res) => {
     try {
@@ -11,14 +11,24 @@ import { sendError, sendSuccess } from "../utils/ApiResponse.util";
 
       // Check if email matches the admin email
       if (email !== adminEmail) {
-        sendError(res, "Invalid email or password", "INVALID_CREDENTIALS", 401);
+        res.status(401).json(
+            { 
+                success: false,
+                message: "Invalid email or password",
+             }
+        );
         return;
       }
 
       // Verify password
         const isPasswordValid = password === adminPassword;
       if (!isPasswordValid) {
-        sendError(res, "Invalid email or password", "INVALID_CREDENTIALS", 401);
+        res.status(401).json(
+            { 
+                success: false,
+                message: "Invalid email or password",
+            }
+        );
         return;
       }
 
@@ -28,19 +38,30 @@ import { sendError, sendSuccess } from "../utils/ApiResponse.util";
         expiresIn: "12hr", // 12 hours
       });
 
-      // Store the token in a secure HTTP-only cookie
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax", // Lax is fine for local development
+        secure: false, // Ensure this is false for HTTP
         maxAge: 12 * 60 * 60 * 1000, // 12 hours
       });
+      
 
-      // Send a success response
-      sendSuccess(res, "User logged in successfully", { email: adminEmail });
+    
+    return res.status(200).json(
+        {   
+            success: true,
+            message: "User logged in successfully", 
+            email: adminEmail 
+        }
+    );
+
     } catch (error) {
-      sendError(res, "An unexpected error occurred", "SERVER_ERROR", 500, {
-        stack: error instanceof Error ? error.message : undefined,
-      });
+        console.error("Error in loginUser:", error);
+        res.status(500).json(
+            { 
+                success: false,
+                message: "An error occurred while logging in",
+            }
+        );
     }
   }

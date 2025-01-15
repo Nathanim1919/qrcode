@@ -29,7 +29,7 @@ export const QrcodeGeneratorService = async (userId) => {
 
     if (qrCodeDoc) {
       // Generate the URL for the QR code
-      const qrCodeUrl = `${process.env.BACKEND_BASE_URL}/admin?qrcodeId=${qrCodeDoc._id}`;
+      const qrCodeUrl = `${process.env.BACKEND_BASE_URL}/scanOption?qrcodeId=${qrCodeDoc._id}`;
       console.log("Generated URL for QR Code:", qrCodeUrl);
 
       if (!process.env.BACKEND_BASE_URL) {
@@ -64,7 +64,7 @@ export const QrcodeGeneratorService = async (userId) => {
         await user.save();
 
         // Send email with the QR code and URL
-        // await sendEmail(user.email, qrCodeUrl, filePath);
+        await sendEmail(user.email, qrCodeUrl, filePath);
 
         return qrCodeBase64;
       } catch (qrCodeError) {

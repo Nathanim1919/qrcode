@@ -7,6 +7,7 @@ import {
   deleteEvent,
   getAllTodayEvents,
 } from "../controller/event.controller.js";
+import authenticateUser from "../middleware/userVerfication.js";
 
 const router = Router();
 
@@ -15,7 +16,7 @@ router.post("/", createEvent);
 
 
 // get today events
-router.get("/today", getAllTodayEvents);
+router.get("/today",authenticateUser, getAllTodayEvents);
 
 // Get all events
 router.get("/", getAllEvents);
