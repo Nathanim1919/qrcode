@@ -161,8 +161,6 @@ export const validateQrCodeForEvent = async (qrCodeId, scanType,scanTime, eventI
     const currentDate = new Date().toLocaleDateString("en-CA"); // Format: YYYY-MM-DD
     const eventDate = new Date(event.date).toLocaleDateString("en-CA");
   
-    console.log("currentDate", currentDate);
-    console.log("eventDate", eventDate);
     
     if (currentDate !== eventDate) {
       return {
@@ -171,11 +169,7 @@ export const validateQrCodeForEvent = async (qrCodeId, scanType,scanTime, eventI
       };
     }
     
-    
 
-
-    console.log("event", event.time);
-    console.log("scanType", scanType);
     // Validate the event time
     if (event.type !== scanType) {
       return {
@@ -186,7 +180,16 @@ export const validateQrCodeForEvent = async (qrCodeId, scanType,scanTime, eventI
 
 
     const {userId} = qrCode;
-    console.log("userId", userId);
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return {
+        message: "User not found",
+        success: false,
+      };
+    }
+    
     // Mark the QR code as used by creating an attendance record
     const attendanceRecord = new Attendance({
       userId,
@@ -198,7 +201,7 @@ export const validateQrCodeForEvent = async (qrCodeId, scanType,scanTime, eventI
 
     // Return success response
     return {
-      data: { qrCodeId: qrCode._id, eventId: event._id, userId },
+      data: { qrCodeId: qrCode._id, eventId: event._id, user },
       message: "QR code is valid and attendance recorded successfully",
       success: true,
     };

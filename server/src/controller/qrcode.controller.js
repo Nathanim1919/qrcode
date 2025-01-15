@@ -32,7 +32,7 @@ export const validateQrCode = async (req, res) => {
     }
 
     const response = await validateQrCodeForEvent(qrcodeId, scanType, scanTime, eventId);
-    return res.status(200).json({ success: response.success, message: response.message });
+    return res.status(200).json({ data:response.data,success: response.success, message: response.message });
   } catch (error) {
     console.error("Error in validateQrCode:", error);
     let statusCode = 500;
