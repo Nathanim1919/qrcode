@@ -14,7 +14,7 @@ const UserSchema = new Schema(
         type: String,
         required: true,
         unique: true,
-        default: () => `#YESHI-${nanoid(8)}`, // Default value
+        default: () => `#WDG-${nanoid(8)}`, // Default value
       },
     qrCode: { type: Schema.Types.ObjectId, ref: "QR" },
   },

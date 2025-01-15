@@ -4,6 +4,7 @@ import cors from "cors";
 import qrCodeRoute from './src/route/qrCode.route.js'
 import userRoute from "./src/route/user.route.js";
 import evenRoute from "./src/route/event.route.js";
+import attendanceRoute from "./src/route/attendance.route.js";
 import dotenv from 'dotenv'
 
 
@@ -13,9 +14,8 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://7fdc0466391ae8.lhr.life'], // Allow both
+    origin: ['http://localhost:5173',"https://3c46ddc76dd116.lhr.life"], // Allow both
     methods: ["POST", "GET", "PUT", "PUCH"],
-
   })
 );
 
@@ -33,6 +33,8 @@ mongoose
 app.use("/qrcode", qrCodeRoute);
 app.use("/users", userRoute);
 app.use("/events", evenRoute);
+app.use("/attendance", attendanceRoute);
+
 
 
 app.listen(3000, () => {

@@ -1,6 +1,5 @@
-import { Request, Response } from 'express';
-import Attendance from '../models/attendance';
-import Event from '../models/event';
+import {Attendance} from "../model/Attendance.model.js"
+import {Event} from "../model/Event.model.js"
 
 // Record attendance
 export const recordAttendance = async (req, res) => {
@@ -41,10 +40,11 @@ export const recordAttendance = async (req, res) => {
   }
 };
 
+
 // Get attendance for a specific event and type
 export const getEventAttendance = async (req, res) => {
   try {
-    const { eventId, type } = req.params; // 'type' can be 'event' or 'meal'
+    const { eventId, type } = req.params;
 
     // Validate event
     const event = await Event.findById(eventId);
@@ -58,6 +58,7 @@ export const getEventAttendance = async (req, res) => {
     return res.status(500).json({ message: 'Server error. Could not fetch attendance.' });
   }
 };
+
 
 // Check if a user has attended
 export const checkUserAttendance = async (req, res) => {
@@ -79,12 +80,50 @@ export const checkUserAttendance = async (req, res) => {
   }
 };
 
+
+//Get user attendance
+export const getUserAttendance = async (req, res) => {
+  console.log("getUserAttendance")
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required.' });
+    }
+
+    const attendanceList = await Attendance.find({ userId }).populate('eventId');
+    return res.status(200).json(attendanceList);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Server error. Could not fetch attendance.' });
+  }
+};
+
+
+export const getUserAttendanceByQrCode = async (req, res) => {
+  try {
+    const { qrcodeId } = req.params;
+
+    if (!qrcodeId) {
+      return res.status(400).json({ message: 'QR Code ID is required.' });
+    }
+    
+
+    const attendance = await Attendance.find({ qrCodeId:qrcodeId }).populate('eventId');
+    return res.status(200).json(attendance);
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error. Could not fetch attendance.' });
+  }
+}
+
+
 // Get all attendance records
 export const getAllAttendance = async (req, res) => {
   try {
-    const attendanceRecords = await Attendance.find().populate('userId', 'name').populate('eventId', 'name');
+    const attendanceRecords = await Attendance.find().populate('eventId');
     return res.status(200).json(attendanceRecords);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: 'Server error. Could not fetch attendance records.' });
   }
 };

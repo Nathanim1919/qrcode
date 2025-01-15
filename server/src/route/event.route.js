@@ -5,7 +5,7 @@ import {
   getAllEvents,
   updateEvent,
   deleteEvent,
-  getAllTodayEvents
+  getAllTodayEvents,
 } from "../controller/event.controller.js";
 
 const router = Router();
@@ -22,6 +22,8 @@ router.get("/", getAllEvents);
 
 // Get a single event by ID
 router.get("/:id", getEventById);
+
+
 
 // Update event details
 router.put("/:id", updateEvent);

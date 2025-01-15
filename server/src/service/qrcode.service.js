@@ -64,7 +64,7 @@ export const QrcodeGeneratorService = async (userId) => {
         await user.save();
 
         // Send email with the QR code and URL
-        await sendEmail(user.email, qrCodeUrl, filePath);
+        // await sendEmail(user.email, qrCodeUrl, filePath);
 
         return qrCodeBase64;
       } catch (qrCodeError) {
