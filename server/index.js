@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', process.env.BACKEND_BASE_URL],
     credentials: true, // Allow sending cookies
     methods: ["POST", "GET", "PUT", "PUCH"],
   })
