@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
 import axiosInstance from "../constants/config";
+import { Link } from "react-router-dom";
 
 
 interface IUser {
@@ -90,9 +91,9 @@ const AdminPage: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-700">
              {formattedFullDate}
             </h2>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">
-              View All
-            </button>
+            <Link to={'/events'}  className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">
+              Events
+            </Link>
           </div>
         </div>
   
