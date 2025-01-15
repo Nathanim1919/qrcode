@@ -1,4 +1,28 @@
+import axios from "axios";
+import { useState } from "react";
+
+
 const LoginPage: React.FC = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post("http://localhost:3000/auth/login", {
+          email,
+          password,
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+        const errorMessage = document.getElementById("errorMessage");
+        if (errorMessage) {
+          errorMessage.classList.remove("hidden");
+        }
+      }
+    };
+
     return (
       <div className="w-screen h-screen bg-gradient-to-br from-blue-600 to-sky-400 flex items-center justify-center">
         <div className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-md">
@@ -8,7 +32,9 @@ const LoginPage: React.FC = () => {
           <p className="text-center text-gray-600 mt-2">
             Log in to your account to continue
           </p>
-          <form className="grid gap-5 mt-6">
+          <form
+            onSubmit={handleSubmit}
+           className="grid gap-5 mt-6">
             {/* Email Field */}
             <div className="flex flex-col">
               <label htmlFor="email" className="text-sm font-medium text-gray-700">
@@ -21,6 +47,7 @@ const LoginPage: React.FC = () => {
                 name="email"
                 id="email"
                 required
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             {/* Password Field */}
@@ -35,6 +62,7 @@ const LoginPage: React.FC = () => {
                 name="password"
                 id="password"
                 required
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             {/* Error Handling Placeholder */}
