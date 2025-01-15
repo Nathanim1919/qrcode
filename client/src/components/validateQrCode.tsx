@@ -8,6 +8,9 @@ import { ImSpinner2 } from "react-icons/im";
 import axiosInstance from "../constants/config";
 
 interface IResponse {
+  data: {
+    user:any
+  }
   message: string;
   success: boolean;
 }
@@ -18,6 +21,7 @@ export const ValidateQrCode = () => {
   const scanTime = searchParams.get("scanTime");
   const scanType = searchParams.get("scanType");
   const eventId = searchParams.get("eventId");
+  const [user, setUser] = useState<any>();
 
   const navigate = useNavigate();
 
@@ -50,6 +54,9 @@ export const ValidateQrCode = () => {
         await axiosInstance.get(
           `/qrcode/validate?qrcodeId=${qrcodeId}&scanTime=${scanTime}&scanType=${scanType}&eventId=${eventId}`
         );
+      setUser(data.data.user);
+      console.log("Data is: ",data);
+
       setHeaderText(data.message);
       setSuccess(data.success);
     } catch (error) {
@@ -66,6 +73,8 @@ export const ValidateQrCode = () => {
   }, []);
 
 
+  console.log("User", user);
+
 
   const handleRedirect = () => {
     navigate(`/admin`);
@@ -73,14 +82,20 @@ export const ValidateQrCode = () => {
 
   return (
     <div className="container fixed w-screen h-screen bg-sky-300 grid place-items-center">
-      <div className={`w-[80%] md:w-[300px] bg-white p-6 shadow-2xl rounded-md`}>
+      <div className={`w-[80%] md:w-[300px] bg-white shadow-2xl rounded-md`}>
         {loading ? (
           <div className="loader flex justify-center items-center gap-2">
             <ImSpinner2 className="text-5xl animate-spin text-blue-500" />
             Checking QR code...
           </div>
         ) : (
-          <div className="success-message">
+          <div className="success-message flex flex-col">
+            <div className="w-full p-4 bg-gray-900 flex flex-col items-center justify-center">
+              <h1 className="font-bold text-gray-100">
+                {user?.name}
+              </h1>
+              <p className="text-gray-400">{user?.email}</p>
+            </div>
            <div className="relative w-full h-[60%]">
             <img src={QrCodeImage} alt="QR Code" className="qrcode-image w-full h-full" />
             <span className={`w-20 border-8 border-white h-20 text-4xl rounded-full grid place-items-center absolute bottom-4 text-whit right-4 text-white
@@ -101,7 +116,7 @@ export const ValidateQrCode = () => {
               </div>
           <button
             onClick={handleRedirect}
-            className={`w-full mt-4 p-2 rounded-md text-white font-bold ${
+            className={`w-[90%] mx-auto mb-4 mt-4 p-2 rounded-md text-white font-bold ${
               success ? "bg-green-500" : "bg-red-500"
             }`}
           >

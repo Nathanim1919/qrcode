@@ -103,8 +103,6 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
             }
           : null
       );
-      console.log(res.data);
-      console.log(selectedUser?.qrCode.code);
     } catch (error) {
       console.log(error);
     } finally {
@@ -233,7 +231,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
             </h1>
           )}
 
-          <div className="flex items-center place-items-center gap-2">
+          <div className="flex flex-wrap items-center place-items-center gap-2">
             {userAttendance.map((attendance) => (
               <div className="bg-gray-200 flex-1 p-4 border border-gray-300 ">
                 <h2 className="text-blue-500">

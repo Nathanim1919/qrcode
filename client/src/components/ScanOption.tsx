@@ -83,7 +83,7 @@ export const ScanningOption: React.FC = () => {
       </h1>
 
       {/* Options Container */}
-      <div className="grid grid-cols-2 gap-4 max-w-lg w-[90%] md:w-[700px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-lg w-[90%] h-[75vh] overflow-y-auto md:w-[60%]">
         {events.length > 0 &&
           events.map((event: IEvent) => {
             const alreadyScanned = userAttendance.some(
