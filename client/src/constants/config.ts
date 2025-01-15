@@ -1,1 +1,1 @@
-export const  BASE_URL ="https://2584bdda8537ee.lhr.life"
+export const  BASE_URL ="https://cf2c6c45e5268f.lhr.life"
