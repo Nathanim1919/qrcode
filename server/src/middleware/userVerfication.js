@@ -1,28 +1,35 @@
-
+import jwt from "jsonwebtoken";
+import { sendError } from "../utils/ApiResponse.util";
 
 const authenticateUser = async (req, res, next) => {
-    // get the access from the cookie
+  try {
+    // Get the access token from cookies
     const token = req.cookies.accessToken;
-  
+
     if (!token) {
-      res.status(401).json({ message: 'Unauthorized' });
+      sendError(res, "Unauthorized access", "UNAUTHORIZED", 401);
       return;
     }
-  
-    const decoded = await AuthUtils.verifyToken(token);
-  
-    try {
-      const user = await User.findById(decoded.userId).select('_id email role');
-  
-      if (!user) {
-        res.status(401).json({ message: 'User not found' });
-        return;
-      }
-  
-      req.user = user._id.toString(); // Attach user with role to the request object
-      req.role = user.role;
-      next();
-    } catch (error) {
-      res.status(401).json({ message: 'Invalid token' });
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Ensure the token contains the required fields
+    if (!decoded || !decoded.email || decoded.role !== "admin") {
+      sendError(res, "Unauthorized access", "UNAUTHORIZED", 401);
+      return;
     }
-  };
+
+    // Attach the user information to the request object
+    req.user = decoded.email;
+    req.role = decoded.role;
+
+    next(); // Proceed to the next middleware or route handler
+  } catch (error) {
+    sendError(res, "Invalid or expired token", "INVALID_TOKEN", 401, {
+      stack: error.message,
+    });
+  }
+};
+
+export default authenticateUser;
