@@ -1,12 +1,11 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "../styles/validationCard.css";
 import { FaCheck } from "react-icons/fa";
 import QrCodeImage from "../assets/qr.png"
 import { IoCloseSharp } from "react-icons/io5";
 import { ImSpinner2 } from "react-icons/im";
-import axiosInstance, { BASE_URL } from "../constants/config";
+import axiosInstance from "../constants/config";
 
 interface IResponse {
   message: string;
@@ -19,6 +18,8 @@ export const ValidateQrCode = () => {
   const scanTime = searchParams.get("scanTime");
   const scanType = searchParams.get("scanType");
   const eventId = searchParams.get("eventId");
+
+  const navigate = useNavigate();
 
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -64,6 +65,12 @@ export const ValidateQrCode = () => {
     handleValidation();
   }, []);
 
+
+
+  const handleRedirect = () => {
+    navigate(`/admin`);
+  }
+
   return (
     <div className="container fixed w-screen h-screen bg-sky-300 grid place-items-center">
       <div className={`w-[80%] md:w-[300px] bg-white p-6 shadow-2xl rounded-md`}>
@@ -93,12 +100,12 @@ export const ValidateQrCode = () => {
               >{headerText}</p>
               </div>
           <button
-            onClick={handleValidation}
+            onClick={handleRedirect}
             className={`w-full mt-4 p-2 rounded-md text-white font-bold ${
               success ? "bg-green-500" : "bg-red-500"
             }`}
           >
-              {success ? "Thank You!" : "Try Again"}
+              Thank You!
           </button>
           </div>
         )}

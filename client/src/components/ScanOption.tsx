@@ -1,4 +1,4 @@
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { IEvent } from "../interface/IEvent";
 import { useEffect, useState } from "react";
 import { ImSpinner2 } from "react-icons/im";
@@ -74,6 +74,9 @@ export const ScanningOption: React.FC = () => {
   return (
     <div className="fixed top-0 left-0 w-screen h-screen flex flex-col justify-center items-center bg-sky-500 text-white">
       {/* Header */}
+      <Link to={'/admin'} className="absolute top-4 right-4 bg-white px-2 py-1 text-black font-bold">
+        Go to Admin Page
+      </Link>
       <h1 className="text-2xl w-[90%] mb-4 md:text-3xl font-bold text-center">
         Select Scanning Option for{" "}
         <span className="underline">{formattedFullDate}</span>
@@ -86,7 +89,6 @@ export const ScanningOption: React.FC = () => {
             const alreadyScanned = userAttendance.some(
               (attendance) => attendance.eventId._id === event._id
             );
-
             return (
               <div
                 key={event._id}
