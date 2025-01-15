@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
 import ScanningOption from "../components/ScanOption";
 import axios from "axios";
-import { BASE_URL } from "../constants/config";
+import axiosInstance from "../constants/config";
 
 
 interface IUser {
@@ -35,7 +35,7 @@ const AdminPage: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/users`);
+            const response = await axiosInstance.get(`/users`);
             const data = response.data;
             setUsers(data);
         } catch (error) {
@@ -46,8 +46,8 @@ const AdminPage: React.FC = () => {
 
     const getUserAttendance = async (userId: string) => {
       try {
-        const res = await axios.get(
-          `${BASE_URL}/attendance/userAttendance/${userId}`
+        const res = await axiosInstance.get(
+          `/attendance/userAttendance/${userId}`
         );
         setUserAttendance(res.data);
         console.log(res.data);
@@ -60,7 +60,7 @@ const AdminPage: React.FC = () => {
 
     const getAllAttendance = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/attendance`);
+        const res = await axiosInstance.get(`/attendance`);
         setAllAttendance(res.data);
       } catch (error) {
         console.log(error);

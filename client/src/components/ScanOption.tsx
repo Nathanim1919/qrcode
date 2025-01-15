@@ -1,9 +1,9 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { IEvent } from "../interface/IEvent";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../constants/config";
 import { ImSpinner2 } from "react-icons/im";
+import axiosInstance from "../constants/config";
+
 
 export const ScanningOption: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -35,8 +35,8 @@ export const ScanningOption: React.FC = () => {
     setIsLoaded(true);
     const fetchEvents = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/events/today`);
-        setEvents(res.data);
+        const res = await axiosInstance.get(`/events/today`);
+        setEvents(res.data.data);
       } catch (error) {
         console.error("Failed to fetch events", error);
       }
@@ -48,8 +48,8 @@ export const ScanningOption: React.FC = () => {
 
   const getUserAttendance = async (qrcodeId: string) => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}/attendance/userAttendanceByQrcode/${qrcodeId}`
+      const res = await axiosInstance.get(
+        `/attendance/userAttendanceByQrcode/${qrcodeId}`
       );
       setUserAttendance(res.data);
     } catch (error) {

@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -13,7 +15,16 @@ const LoginPage: React.FC = () => {
           email,
           password,
         });
-        console.log(response.data);
+        const {data} = response;
+        if (data.success) {
+          alert("Login successful, redirecting to admin page...");
+          // navigate("/admin");
+        } else {
+          const errorMessage = document.getElementById("errorMessage");
+          if (errorMessage) {
+            errorMessage.classList.remove("hidden");
+          }
+        }
       } catch (error) {
         console.error(error);
         const errorMessage = document.getElementById("errorMessage");
