@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
-import ScanningOption from "../components/ScanOption";
-import axios from "axios";
 import axiosInstance from "../constants/config";
 
 
@@ -85,7 +83,6 @@ const AdminPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-white p-2 md:w-[100%] md:mx-auto max-h-screen overflow-hidden">
         {/* Header */}
-        <ScanningOption userAttendance={userAttendance}/>
         <UserDetailCard userAttendance={userAttendance} setSelectedUser={setSelectedUser} selectedUser={selectedUser} setShowUserDetailCard={setShowUserDetailCard} showUserDetailCard={showUserDetailCard}/>
         <div className="min-h-screen bg-white p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
         <div className="bg-white p-2 rounded-md mb-2">

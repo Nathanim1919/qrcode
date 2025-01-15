@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import axiosInstance from "../constants/config";
 
 
 const LoginPage: React.FC = () => {
@@ -8,17 +8,24 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    const [searchParams] = useSearchParams();
+    const qrcodeId = searchParams.get("qrcodeId");
+
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       try {
-        const response = await axios.post("http://localhost:3000/auth/login", {
+        const response = await axiosInstance.post("/auth/login", {
           email,
           password,
         });
         const {data} = response;
         if (data.success) {
-          alert("Login successful, redirecting to admin page...");
-          // navigate("/admin");
+          if (qrcodeId){
+            navigate(`/scanOption?qrcodeId=${qrcodeId}`);
+          } else {
+            navigate("/admin")
+          }
         } else {
           const errorMessage = document.getElementById("errorMessage");
           if (errorMessage) {

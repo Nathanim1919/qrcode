@@ -63,8 +63,6 @@ export const ScanningOption: React.FC = () => {
     }
   }, [qrcodeId]);
 
-  if (!qrcodeId) return null;
-
   if (isLoaded) {
     return (
       <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-sky-500 text-white">
