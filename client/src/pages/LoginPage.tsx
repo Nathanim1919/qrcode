@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../constants/config";
+import { CgSpinnerTwo } from "react-icons/cg";
+
 
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();
 
     const [searchParams] = useSearchParams();
@@ -15,6 +18,7 @@ const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       try {
+        setIsLoaded(true);
         const response = await axiosInstance.post("/auth/login", {
           email,
           password,
@@ -38,6 +42,8 @@ const LoginPage: React.FC = () => {
         if (errorMessage) {
           errorMessage.classList.remove("hidden");
         }
+      } finally {
+        setIsLoaded(false);
       }
     };
 
@@ -89,10 +95,15 @@ const LoginPage: React.FC = () => {
             </p>
             {/* Login Button */}
             <button
+              disabled={isLoaded}
               type="submit"
-              className="bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-blue-600 text-white py-3 grid place-items-center rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              Log In
+              {isLoaded ? (
+                <CgSpinnerTwo className="animate-spin inline-block" />
+              ) : (
+                "Log In"
+              )}
             </button>
           </form>
         </div>
