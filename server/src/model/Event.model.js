@@ -7,8 +7,18 @@ const EventSchema = new Schema(
       date: { type: Date, required: true },
       time: { type: String, enum: ['Morning', 'Afternoon'], required: true },
       type: { type: String, enum: ['Event', 'Meal'], required: true },
-      status: { type: String, enum: ['Pending','Ongoing', 'Done'], required: true },
-      visibility: { type: String, enum: ['Public', 'Private'], required: true },
+      status: { 
+        type: String, 
+        enum: ['Pending','Ongoing', 'Done'], 
+        default: 'Pending',
+        required: true 
+      },
+      visibility: { 
+        type: String, 
+        enum: ['Public', 'Private'], 
+        default: 'Public',
+        required: true 
+      },
     },
     { timestamps: true }
   );
