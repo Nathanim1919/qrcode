@@ -5,14 +5,7 @@ import { BASE_URL } from "../constants/config";
 import { FaCheckCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
-
-interface UserDetailCardProps {
-  userAttendance: any[];
-  selectedUser: IUser | null;
-  setSelectedUser: React.Dispatch<React.SetStateAction<IUser | null>>;
-  showUserDetailCard: boolean;
-  setShowUserDetailCard: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { useParams } from "react-router-dom";
 
 interface IUser {
   _id: string;
@@ -24,15 +17,11 @@ interface IUser {
   qrCode: IQrcode;
 }
 
-const UserDetailCard: React.FC<UserDetailCardProps> = ({
-  userAttendance,
-  selectedUser,
-  setSelectedUser,
-  showUserDetailCard,
-  setShowUserDetailCard,
-}) => {
+const UserDetailCard: React.FC = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
+  const {id} = useParams();
   const [isloading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<IUser | null>(null);
 
   const formatDate = (date: Date) => {
     const formattedFullDate = date.toLocaleDateString("en-US", {
@@ -43,6 +32,19 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
 
     return formattedFullDate;
   };
+
+
+  const getUserById = async (id: string) => {
+    try {
+      const res = await axios.get(`${BASE_URL}/users/${id}`);
+      setUser(res.data);
+    } catch (error) {
+      console.error("Error fetching user by ID:", error);
+    }
+  }
+
+
+
   const handlePrintQrCode = () => {
     const printContent = document.getElementById("qr-print-section");
 
@@ -82,7 +84,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.post(`${BASE_URL}/qrcode/generateQrCode`, {
-        userId: selectedUser?._id,
+        userId: user?._id,
       });
       setQrCodeUrl(res.data.response);
       const qrCodeBase64 = res.data.response.replace(
@@ -91,7 +93,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
       );
 
       // Update the selectedUser's qrCode property with the new QR code
-      setSelectedUser((prevUser) =>
+      setUser((prevUser) =>
         prevUser
           ? {
               ...prevUser,
@@ -109,9 +111,10 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
     }
   };
 
-  useEffect(() => {}, [qrCodeUrl]);
+  useEffect(() => {
+    getUserById(id??"");
+  }, [id, qrCodeUrl]);
 
-  if (!showUserDetailCard) return null;
   return (
     <div className="fixed top-0 left-0 grid place-items-center w-screen h-screen bg-black/40 backdrop-blur-sm">
       <div className="w-[90%] md:max-w-[700px] max-h-[95vh] bg-white rounded-lg shadow-lg overflow-y-auto">
@@ -121,13 +124,6 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
           before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-gray-800 before:rounded-br-full before:rounded-bl-full
           "
         >
-          <IoMdClose
-            className="absolute top-4 right-4 text-2xl cursor-pointer"
-            onClick={() => {
-              setSelectedUser(null);
-              setShowUserDetailCard(false);
-            }}
-          />
           <h2 className="text-xl font-bold text-white relative z-10">
             Nathanim Tadele
           </h2>
@@ -144,33 +140,33 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <p className="font-bold text-gray-600">Email:</p>
-                <p className="text-gray-700">{selectedUser?.email}</p>
+                <p className="text-gray-700">{user?.email}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-bold text-gray-600">Phone:</p>
-                <p className="text-gray-700">{selectedUser?.phone}</p>
+                <p className="text-gray-700">{user?.phone}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-bold text-gray-600">Address:</p>
-                <p className="text-gray-700">{selectedUser?.address}</p>
+                <p className="text-gray-700">{user?.address}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-bold text-gray-600">Unique ID:</p>
-                <p className="text-gray-700">{selectedUser?.uniqueId}</p>
+                <p className="text-gray-700">{user?.uniqueId}</p>
               </div>
             </div>
           </div>
 
           {/* QR Code Section */}
-          {selectedUser?.qrCode ? (
+          {user?.qrCode ? (
             <div className="bg-gray-200 border grid gap-3  border-gray-300">
               <h3 className="font-semibold p-1 px-4  flex items-center justify-center text-lg mb-4 text-gray-700">
                 <span>QR Code</span>
               </h3>
               <div className="h-40 w-full rounded-lg flex flex-col items-center justify-center">
-                  {selectedUser.qrCode.code ? (
+                  {user.qrCode.code ? (
                     <img
-                      src={`data:image/png;base64, ${selectedUser.qrCode.code}`}
+                      src={`data:image/png;base64, ${user.qrCode.code}`}
                       alt="QR Code"
                       className="h-48 w-48"
                     />
@@ -178,7 +174,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
                     <img src={qrCodeUrl} alt="QR Code" className="h-48 w-48" />
                   )}
                   <h2 className="font-bold text-center">
-                    {selectedUser.uniqueId}
+                    {user.uniqueId}
                   </h2>
                 </div>
               <button
@@ -191,17 +187,17 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
               {/* Hidden print section */}
               <div id="qr-print-section" className="hidden">
                 <div>
-                  <h1>{selectedUser.name}</h1>
-                  <h3>{selectedUser.phone}</h3>
+                  <h1>{user.name}</h1>
+                  <h3>{user.phone}</h3>
                 </div>
                 <div className="qr-container">
                   <img
-                    src={`data:image/png;base64, ${selectedUser.qrCode.code}`}
+                    src={`data:image/png;base64, ${user.qrCode.code}`}
                     alt="QR Code"
                     className="h-48 w-48"
                   />
                 </div>
-                <div className="unique-id">{selectedUser.uniqueId}</div>
+                <div className="unique-id">{user.uniqueId}</div>
               </div>
             </div>
           ) : (
@@ -226,7 +222,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
           )}
         </div>
 
-        <div className="p-5">
+        {/* <div className="p-5">
           <h1 className="font-bold text-2xl text-center">Guest Attendance</h1>
 
           {userAttendance.length === 0 && (
@@ -248,7 +244,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Attendance Section */}
       </div>

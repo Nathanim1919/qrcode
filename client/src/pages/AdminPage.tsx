@@ -66,7 +66,6 @@ const AdminPage: React.FC = () => {
 
   return (
     <div className="h-screen bg-gray-50 p-4 md:w-[100%] mx-auto md:overflow-hidden">
-      <UserDetailCard userAttendance={userAttendance} />
 
       <div className="bg-white p-4 rounded-lg mb-6">
         <div className="flex items-center justify-between">

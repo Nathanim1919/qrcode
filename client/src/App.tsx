@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import ScanningOption from "./components/ScanOption";
 import { EventPage } from "./pages/EventPage";
 import { Users } from "./pages/UsersPage";
+import UserDetailCard from "./components/UserDetailCard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/events" element={<EventPage />} />
       <Route path="/guests" element={<Users/>}/>
+      <Route path="/guests/:id" element={<UserDetailCard/>}/>
       <Route path="/scanOption" element={<ScanningOption />} />
       <Route path="/admin/scanOption" element={<AdminPage />} />
       <Route path="/validateQrCode" element={<ValidateQrCode />} />

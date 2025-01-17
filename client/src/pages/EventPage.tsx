@@ -49,15 +49,18 @@ export const EventPage: React.FC = () => {
 
   const handleEventCreation = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submitting Event Data:", eventData); // Log eventData for debugging
     try {
       const response = await axiosInstance.post(`/events`, eventData);
+      console.log("Response:", response.data); // Log the server response
       setAvailableEvents([...availableEvents, response.data]);
       setCreateEvent(false);
-      setEventData({ time: "Morning", type: "Training" });
+      setEventData({time: "Morning", type: "Training" });
     } catch (error) {
-      console.error(error);
+      console.error("Error creating event:", error);
     }
   };
+  
 
   const fetchAllEvents = async () => {
     try {
