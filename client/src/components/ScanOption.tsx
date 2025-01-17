@@ -35,8 +35,9 @@ export const ScanningOption: React.FC = () => {
     setIsLoaded(true);
     const fetchEvents = async () => {
       try {
-        const res = await axiosInstance.get(`/events/today`);
-        setEvents(res.data.data);
+        const res = await axiosInstance.get(`/events/today/public`);
+        console.log(res.data);
+        setEvents(res.data);
       } catch (error) {
         console.error("Failed to fetch events", error);
       }
@@ -83,8 +84,8 @@ export const ScanningOption: React.FC = () => {
       </h1>
 
       {/* Options Container */}
-      <div className="flex flex-wrap items-center max-w-lg w-[90%] h-[75vh] overflow-y-auto md:w-[60%]">
-        {events.length > 0 &&
+      <div className="flex flex-wrap items-center justify-center overflow-y-auto w-[90%] md:w-[80%] p-4 gap-4">
+        {events?.length > 0 &&
           events.map((event: IEvent) => {
             const alreadyScanned = userAttendance.some(
               (attendance) => attendance.eventId._id === event._id
@@ -95,7 +96,7 @@ export const ScanningOption: React.FC = () => {
                 className={`relative border border-gray-100 bg-gradient-to-r from-blue-700 to-sky-500 text-center p-6 rounded-lg shadow-lg transition-transform duration-200 ${
                   alreadyScanned
                     ? "opacity-60 cursor-not-allowed"
-                    : "hover:scale-105 hover:from-blue-800 hover:to-sky-600"
+                    : "hover:from-blue-800 hover:to-sky-600"
                 }`}
               >
                 {alreadyScanned && (
