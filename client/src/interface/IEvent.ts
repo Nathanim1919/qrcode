@@ -4,4 +4,6 @@ export interface IEvent {
     date: string;
     time: string;
     type: string;
+    status: string;
+    visibility: 'Public' | 'Private';
 }
