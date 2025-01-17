@@ -4,6 +4,8 @@ import axiosInstance from "../constants/config";
 import { Link } from "react-router-dom";
 import { IEvent } from "../interface/IEvent";
 import { FaRegCalendarAlt, FaClock, FaCheckCircle, FaSpinner } from "react-icons/fa";
+import { IoIosMore } from "react-icons/io";
+
 
 interface IUser {
   _id: string;
@@ -97,7 +99,10 @@ const AdminPage: React.FC = () => {
                 key={event._id}
                 className="p-4 bg-gradient-to-r from-sky-100 via-blue-100 to-sky-200 rounded-lg shadow-md"
               >
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">{event.name}</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="flex items-center justify-between text-lg font-semibold mb-2 text-gray-800">{event.name}</h3>
+                  <button className="bg-blue-500 text-white text-[14px] py-1 px-2 rounded-md shadow-sm hover:bg-white hover:text-gray-900 hover:border-gray-800 border border-gray-200">Set Private</button>
+                </div>
 
                 <p className="text-gray-700 flex items-center mb-2">
                   <FaRegCalendarAlt className="mr-2 text-blue-600" />  {new Date(event.date).toLocaleDateString()}
