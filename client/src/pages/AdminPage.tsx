@@ -3,10 +3,7 @@ import UserDetailCard from "../components/UserDetailCard";
 import axiosInstance from "../constants/config";
 import { Link } from "react-router-dom";
 import { IEvent } from "../interface/IEvent";
-import {
-  FaRegCalendarAlt,
-  FaClock,
-} from "react-icons/fa";
+import { FaRegCalendarAlt, FaClock } from "react-icons/fa";
 
 interface IUser {
   _id: string;
@@ -39,6 +36,20 @@ const AdminPage: React.FC = () => {
     }
   };
 
+  const changeEventVisibility = async (
+    eventId: string,
+    visibility: "Public" | "Private"
+  ) => {
+    try {
+      const res = await axiosInstance.put(`/events/${eventId}/visibility`, {
+        visibility,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.error("Failed to change event visibility", error);
+    }
+  };
+
   const fetchEvents = async () => {
     try {
       const res = await axiosInstance.get(`/events/today`);
@@ -52,7 +63,6 @@ const AdminPage: React.FC = () => {
     fetchUsers();
     fetchEvents();
   }, []);
-
 
   return (
     <div className="h-screen bg-gray-50 p-4 md:w-[100%] mx-auto md:overflow-hidden">
@@ -103,8 +113,18 @@ const AdminPage: React.FC = () => {
                   <h3 className="flex items-center justify-between text-lg font-semibold mb-2 text-gray-800">
                     {event.name}
                   </h3>
-                  <button className="bg-blue-500 text-white text-[14px] py-1 px-2 rounded-md shadow-sm hover:bg-white hover:text-gray-900 hover:border-gray-800 border border-gray-200">
-                    Set Private
+                  <button
+                    onClick={() =>
+                      changeEventVisibility(
+                        event._id,
+                        event.visibility === "Public" ? "Private" : "Public"
+                      )
+                    }
+                    className={`
+                      ${event.visibility === "Public" ? "bg-red-500" : "bg-green-500"}
+                       text-white text-[14px] py-1 px-2 rounded-md shadow-sm hover:bg-white hover:text-gray-900 hover:border-gray-800 border border-gray-200`}
+                  >
+                    Set {event.visibility === "Public" ? "Private" : "Public"}
                   </button>
                 </div>
 

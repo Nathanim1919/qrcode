@@ -39,10 +39,12 @@ const EventCard: React.FC<{ event: any }> = ({ event }) => {
 export const EventPage: React.FC = () => {
   const [createEvent, setCreateEvent] = useState<boolean>(false);
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
-  const [eventData, setEventData] = useState<any>({
-    name: "",
-    time: "",
-    type: "",
+  const [eventData, setEventData] = useState<{
+    time: "Morning" | "Afternoon" | "Evening" | "Night";
+    type: "Training" | "Seminar" | "Workshop" | "Conference" | "Meal";
+  }>({
+    time: "Morning",
+    type: "Training",
   });
 
   const handleEventCreation = async (e: React.FormEvent) => {
@@ -51,7 +53,7 @@ export const EventPage: React.FC = () => {
       const response = await axiosInstance.post(`/events`, eventData);
       setAvailableEvents([...availableEvents, response.data]);
       setCreateEvent(false);
-      setEventData({ name: "", time: "", type: "" });
+      setEventData({ time: "Morning", type: "Training" });
     } catch (error) {
       console.error(error);
     }
@@ -86,45 +88,42 @@ export const EventPage: React.FC = () => {
             <h2 className="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
               <MdOutlineEventNote className="text-blue-500" /> Create New Event
             </h2>
-            <label htmlFor="name" className="text-sm font-semibold text-gray-600">
-              Event Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              className="w-full border border-gray-300 p-2 rounded-lg mt-1 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={eventData.name}
-              onChange={(e) =>
-                setEventData({ ...eventData, name: e.target.value })
-              }
-              required
-            />
+           
             <label htmlFor="time" className="text-sm font-semibold text-gray-600">
               Time
             </label>
-            <input
-              type="time"
+            <select
               id="time"
               className="w-full border border-gray-300 p-2 rounded-lg mt-1 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={eventData.time}
               onChange={(e) =>
-                setEventData({ ...eventData, time: e.target.value })
+                setEventData({ ...eventData, time: e.target.value as "Morning" | "Afternoon" | "Evening" | "Night" })
               }
               required
-            />
+            >
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Evening">Evening</option>
+              <option value="Night">Night</option>
+            </select>
             <label htmlFor="type" className="text-sm font-semibold text-gray-600">
               Event Type
             </label>
-            <input
-              type="text"
+            <select
               id="type"
               className="w-full border border-gray-300 p-2 rounded-lg mt-1 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={eventData.type}
               onChange={(e) =>
-                setEventData({ ...eventData, type: e.target.value })
+                setEventData({ ...eventData, type: e.target.value as "Training" | "Seminar" | "Workshop" | "Conference" | "Meal" })
               }
               required
-            />
+            >
+              <option value="Training">Training</option>
+              <option value="Seminar">Seminar</option>
+              <option value="Workshop">Workshop</option>
+              <option value="Conference">Conference</option>
+              <option value="Meal">Meal</option>
+            </select>
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
