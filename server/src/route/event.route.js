@@ -6,6 +6,8 @@ import {
   updateEvent,
   deleteEvent,
   getAllTodayEvents,
+  getPublicTodayEvents,
+  setEventVisibility,
 } from "../controller/event.controller.js";
 import authenticateUser from "../middleware/userVerfication.js";
 
@@ -14,17 +16,20 @@ const router = Router();
 // Create a new event
 router.post("/", createEvent);
 
-
 // get today events
-router.get("/today",authenticateUser, getAllTodayEvents);
+router.get("/today", authenticateUser, getAllTodayEvents);
+
+// get public today events
+router.get("/today/public", authenticateUser, getPublicTodayEvents);
 
 // Get all events
-router.get("/", getAllEvents);
+router.get("/", authenticateUser, getAllEvents);
 
 // Get a single event by ID
-router.get("/:id", getEventById);
+router.get("/:id", authenticateUser, getEventById);
 
-
+// Update event visibility
+router.put("/:id/visibility", authenticateUser, setEventVisibility);
 
 // Update event details
 router.put("/:id", updateEvent);

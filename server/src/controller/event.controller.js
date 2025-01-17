@@ -52,6 +52,28 @@ export const getAllEvents = async (req, res) => {
 };
 
 
+// List all events happening today with visibility set to public
+export const getPublicTodayEvents = async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0); // Midnight of today
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999); // End of today
+
+    const events = await Event.find({
+      date: { $gte: startOfDay, $lte: endOfDay }, // Match dates within today's range
+      visibility: 'Public', // Match events with public visibility
+    });
+
+    return res.status(200).json(events);
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error. Could not fetch events.' });
+  }
+};
+
+
+
 export const getAllTodayEvents = async (req, res) => {
   try {
     const startOfDay = new Date();
@@ -109,5 +131,28 @@ export const deleteEvent = async (req, res) => {
     return res.status(200).json({ message: 'Event deleted successfully.' });
   } catch (error) {
     return res.status(500).json({ message: 'Server error. Could not delete event.' });
+  }
+};
+
+
+// Set Event Visibility to Public or Private
+export const setEventVisibility = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const { visibility } = req.body;
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      eventId,
+      { visibility },
+      { new: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: 'Event not found.' });
+    }
+
+    return res.status(200).json(updatedEvent);
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error. Could not update event visibility.' });
   }
 };
