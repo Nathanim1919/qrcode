@@ -2,151 +2,136 @@ import { useEffect, useState } from "react";
 import UserDetailCard from "../components/UserDetailCard";
 import axiosInstance from "../constants/config";
 import { Link } from "react-router-dom";
-
+import { IEvent } from "../interface/IEvent";
+import { FaRegCalendarAlt, FaClock, FaCheckCircle, FaSpinner } from "react-icons/fa";
 
 interface IUser {
   _id: string;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    uniqueId: string;
-    qrCodeId: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  uniqueId: string;
+  qrCodeId: string;
 }
 
 const AdminPage: React.FC = () => {
-    const [users, setUsers] = useState<IUser[]>([]);
-    const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-    const [userAttendance, setUserAttendance] = useState<any[]>([]);
-    const [allAttendance, setAllAttendance] = useState<any[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [userAttendance, setUserAttendance] = useState<any[]>([]);
 
-
-    // Get the current date
   const today = new Date();
-
-  // Format the current date to "Jan 14"
   const formattedFullDate = today.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
 
-
-    const fetchUsers = async () => {
-        try {
-            const response = await axiosInstance.get(`/users`);
-            const data = response.data;
-            setUsers(data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-
-    const getUserAttendance = async (userId: string) => {
-      try {
-        const res = await axiosInstance.get(
-          `/attendance/userAttendance/${userId}`
-        );
-        setUserAttendance(res.data);
-        console.log(res.data);
-      } catch (error) {
-        console.log(error);
-      }
+  const fetchUsers = async () => {
+    try {
+      const response = await axiosInstance.get(`/users`);
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
     }
+  };
 
+  const fetchEvents = async () => {
+    try {
+      const res = await axiosInstance.get(`/events/today`);
+      setEvents(res.data.data);
+    } catch (error) {
+      console.error("Failed to fetch events", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchUsers();
+    fetchEvents();
+  }, []);
 
-    const getAllAttendance = async () => {
-      try {
-        const res = await axiosInstance.get(`/attendance`);
-        setAllAttendance(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
-  
-    useEffect(() => {
-      if (selectedUser) {
-        getUserAttendance(selectedUser._id);
-      }
-    }, [selectedUser]);
-  
-    console.log("All Attendance", allAttendance);
+  const getEventStatus = (event: IEvent) => {
+    const eventDate = new Date(`${event.date}T${event.time}`);
+    if (eventDate > new Date()) return "Ongoing";
+    return "Completed";
+  };
 
-    useEffect(() => {
-      getAllAttendance();
-        fetchUsers();
-    }, []);
-   
-    const [showUserDetailCard, setShowUserDetailCard] = useState(false);
-    return (
-      <div className="min-h-screen bg-white p-2 md:w-[100%] md:mx-auto max-h-screen overflow-hidden">
-        {/* Header */}
-        <UserDetailCard userAttendance={userAttendance} setSelectedUser={setSelectedUser} selectedUser={selectedUser} setShowUserDetailCard={setShowUserDetailCard} showUserDetailCard={showUserDetailCard}/>
-        <div className="min-h-screen bg-white p-2 md:w-[70%] md:mx-auto max-h-screen overflow-hidden">
-        <div className="bg-white p-2 rounded-md mb-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-700">
-             {formattedFullDate}
-            </h2>
-            <Link to={'/events'}  className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 md:w-[100%] mx-auto">
+      <UserDetailCard userAttendance={userAttendance} />
+
+      <div className="bg-white p-4 rounded-lg shadow-lg mb-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-700">{formattedFullDate}</h2>
+          <div className="space-x-4">
+            <Link
+              to="/guests"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition"
+            >
+              Guests
+            </Link>
+            <Link
+              to="/events"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition"
+            >
               Events
             </Link>
           </div>
         </div>
-  
-        {/* Stats Section */}
-        <div className="grid grid-cols-3 gap-1 bg-gray-200 border border-gray-300">
-          {/* Total Users */}
-          <div className=" p-6 rounded-md text-center">
-            <h2 className="text-4xl font-bold text-blue-600">{users.length}</h2>
-            <p className="text-gray-500">Total</p>
-          </div>
-  
-          {/* Scanned Users */}
-          <div className=" p-6 rounded-md text-center">
-            <h2 className="text-4xl font-bold text-green-600">{allAttendance.length}</h2>
-            <p className="text-gray-500">Scanned</p>
-          </div>
-  
-          {/* Unscanned Users */}
-          {/* <div className=" p-6 rounded-md text-center">
-            <h2 className="text-4xl font-bold text-red-600">{users.length - allAttendance.length}</h2>
-            <p className="text-gray-500">Unscanned</p>
-          </div> */}
+      </div>
+
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Users */}
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <h2 className="text-4xl font-extrabold text-blue-600">{users.length}</h2>
+          <p className="text-gray-500">Total Users</p>
         </div>
-        <div className="bg-white mt-2">
-            {/* <div className="flex justify-center items-center p-2 bg-white">
-                <form className="w-full">
-                    <input type="text" placeholder="write user name"/>
-                    <button type="submit">search</button>
-                </form>
-            </div> */}
-            <div className="h-[65vh] p-4 overflow-y-auto flex flex-col gap-1">
-                {
-                    users?.map(user => (
-                        <div className="flex border cursor-pointer hover:bg-gray-100 border-gray-200 p-1 justify-between items-center text-gray-500">
-                           <p>{user.uniqueId}</p>
-                            <p>{user.name}</p>
-                            <p className="hidden md:block">{user.email}</p>
-                            <p>{user.phone}</p>
-                            <button
-                                onClick={() => {
-                                    setSelectedUser(user)
-                                    setShowUserDetailCard(true)
-                                }}
-                             className="text-blue-500 border border-sky-400 px-1 rounded-md">View</button>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
+
+        {/* Today's Events */}
+        <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="font-bold text-xl mb-4">Today's Events</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {events.map((event) => (
+              <div
+                key={event._id}
+                className="p-4 bg-gradient-to-r from-sky-100 via-blue-100 to-sky-200 rounded-lg shadow-md"
+              >
+                <h3 className="text-lg font-semibold mb-2 text-gray-800">{event.name}</h3>
+
+                <p className="text-gray-700 flex items-center mb-2">
+                  <FaRegCalendarAlt className="mr-2 text-blue-600" /> {event.date}
+                </p>
+
+                <p className="text-gray-700 flex items-center mb-2">
+                  <FaClock className="mr-2 text-blue-600" /> {event.time}
+                </p>
+
+                <p className="text-gray-700 mb-2">
+                  <span className="font-semibold">Type:</span> {event.type}
+                </p>
+
+                <p
+                  className={`flex items-center font-semibold text-sm ${
+                    getEventStatus(event) === "Ongoing"
+                      ? "text-green-600"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {getEventStatus(event) === "Ongoing" ? (
+                    <FaSpinner className="mr-2 animate-spin" />
+                  ) : (
+                    <FaCheckCircle className="mr-2" />
+                  )}
+                  {getEventStatus(event)}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    );
-  };
-  
-  export default AdminPage;
-  
+    </div>
+  );
+};
+
+export default AdminPage;

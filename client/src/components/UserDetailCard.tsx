@@ -5,7 +5,7 @@ import { BASE_URL } from "../constants/config";
 import { FaCheckCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
-
+import { RiRefreshLine } from "react-icons/ri";
 
 interface UserDetailCardProps {
   userAttendance: any[];
@@ -138,25 +138,25 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
         {/* Details Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
           {/* Personal Info */}
-          <div>
+          <div className="bg-gray-200 p-3 border border-gray-300">
             <h3 className="font-semibold text-lg mb-4 text-gray-700">
               Personal Information
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <p className="font-medium text-gray-600">Email:</p>
+                <p className="font-bold text-gray-600">Email:</p>
                 <p className="text-gray-700">{selectedUser?.email}</p>
               </div>
               <div className="flex justify-between">
-                <p className="font-medium text-gray-600">Phone:</p>
+                <p className="font-bold text-gray-600">Phone:</p>
                 <p className="text-gray-700">{selectedUser?.phone}</p>
               </div>
               <div className="flex justify-between">
-                <p className="font-medium text-gray-600">Address:</p>
+                <p className="font-bold text-gray-600">Address:</p>
                 <p className="text-gray-700">{selectedUser?.address}</p>
               </div>
               <div className="flex justify-between">
-                <p className="font-medium text-gray-600">Unique ID:</p>
+                <p className="font-bold text-gray-600">Unique ID:</p>
                 <p className="text-gray-700">{selectedUser?.uniqueId}</p>
               </div>
             </div>
@@ -164,25 +164,27 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
 
           {/* QR Code Section */}
           {selectedUser?.qrCode ? (
-            <div>
-              <h3 className="font-semibold text-lg mb-4 text-gray-700">
-                Your QR Code
+            <div className="bg-gray-200 border grid gap-3  border-gray-300">
+              <h3 className="font-semibold p-1 px-4  flex items-center justify-center text-lg mb-4 text-gray-700">
+                <span>QR Code</span>
               </h3>
-              <div className="h-40 w-full rounded-lg flex items-center justify-center">
-                {selectedUser.qrCode.code ? (
-                  <img
-                    src={`data:image/png;base64, ${selectedUser.qrCode.code}`}
-                    alt="QR Code"
-                    className="h-48 w-48"
-                  />
-                ) : (
-                  <img src={qrCodeUrl} alt="QR Code" className="h-48 w-48" />
-                )}
-              </div>
-              <h2 className="font-bold text-center">{selectedUser.uniqueId}</h2>
+              <div className="h-40 w-full rounded-lg flex flex-col items-center justify-center">
+                  {selectedUser.qrCode.code ? (
+                    <img
+                      src={`data:image/png;base64, ${selectedUser.qrCode.code}`}
+                      alt="QR Code"
+                      className="h-48 w-48"
+                    />
+                  ) : (
+                    <img src={qrCodeUrl} alt="QR Code" className="h-48 w-48" />
+                  )}
+                  <h2 className="font-bold text-center">
+                    {selectedUser.uniqueId}
+                  </h2>
+                </div>
               <button
                 onClick={handlePrintQrCode}
-                className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition"
+                className="mt-4 w-[60%] border border-blue-700 bg-blue-400 text-white py-2 my-3 mx-auto rounded-lg font-medium hover:bg-blue-600 transition"
               >
                 Print QR Code
               </button>
@@ -212,11 +214,14 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
                 onClick={handleGenerateQrCode}
                 className={`mt-4 w-full bg-blue-400 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition`}
               >
-                {isloading ? 
-                <span className="flex items-center gap-2 justify-center">
-                  <FaSpinner className="animate-spin" />
-                  Generating...
-                </span> : "Regenerate QR Code"}
+                {isloading ? (
+                  <span className="flex items-center gap-2 justify-center">
+                    <FaSpinner className="animate-spin" />
+                    Generating...
+                  </span>
+                ) : (
+                  "Regenerate QR Code"
+                )}
               </button>
             </div>
           )}
@@ -226,9 +231,7 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
           <h1 className="font-bold text-2xl text-center">Guest Attendance</h1>
 
           {userAttendance.length === 0 && (
-            <h1 className="text-1xl text-center">
-              No Attendance Found
-            </h1>
+            <h1 className="text-1xl text-center">No Attendance Found</h1>
           )}
 
           <div className="flex flex-wrap items-center place-items-center gap-2">
@@ -256,32 +259,32 @@ const UserDetailCard: React.FC<UserDetailCardProps> = ({
 
 export default UserDetailCard;
 
-        // <div className="p-6 bg-gray-50">
-        //   <h3 className="font-bold text-lg text-gray-700 mb-4">Attendance</h3>
-        //   <div className="space-y-6">
-        //     {/* Attendance Day */}
-        //     {["Jan 23", "Jan 24", "Jan 25"].map((day) => (
-        //       <div key={day} className="bg-gray-100 p-2">
-        //         <h4 className="font-medium text-gray-600 mb-2">{day}</h4>
-        //         <div className="flex justify-between">
-        //           <div className="flex-1 text-center">
-        //             <p className="font-medium text-sm text-gray-700">Morning</p>
-        //             <div className="flex justify-center gap-2 mt-2">
-        //               <div className="w-6 h-6 bg-green-500 rounded"></div>
-        //               <div className="w-6 h-6 bg-green-500 rounded"></div>
-        //             </div>
-        //           </div>
-        //           <div className="flex-1 text-center">
-        //             <p className="font-medium text-sm text-gray-700">
-        //               Afternoon
-        //             </p>
-        //             <div className="flex justify-center gap-2 mt-2">
-        //               <div className="w-6 h-6 bg-red-500 rounded"></div>
-        //               <div className="w-6 h-6 bg-red-500 rounded"></div>
-        //             </div>
-        //           </div>
-        //         </div>
-        //       </div>
-        //     ))}
-        //   </div>
-        // </div>
+// <div className="p-6 bg-gray-50">
+//   <h3 className="font-bold text-lg text-gray-700 mb-4">Attendance</h3>
+//   <div className="space-y-6">
+//     {/* Attendance Day */}
+//     {["Jan 23", "Jan 24", "Jan 25"].map((day) => (
+//       <div key={day} className="bg-gray-100 p-2">
+//         <h4 className="font-medium text-gray-600 mb-2">{day}</h4>
+//         <div className="flex justify-between">
+//           <div className="flex-1 text-center">
+//             <p className="font-medium text-sm text-gray-700">Morning</p>
+//             <div className="flex justify-center gap-2 mt-2">
+//               <div className="w-6 h-6 bg-green-500 rounded"></div>
+//               <div className="w-6 h-6 bg-green-500 rounded"></div>
+//             </div>
+//           </div>
+//           <div className="flex-1 text-center">
+//             <p className="font-medium text-sm text-gray-700">
+//               Afternoon
+//             </p>
+//             <div className="flex justify-center gap-2 mt-2">
+//               <div className="w-6 h-6 bg-red-500 rounded"></div>
+//               <div className="w-6 h-6 bg-red-500 rounded"></div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     ))}
+//   </div>
+// </div>
