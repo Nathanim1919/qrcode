@@ -1,26 +1,34 @@
-import mongoose, {Schema} from 'mongoose';
-
+import mongoose, { Schema } from "mongoose";
 
 const EventSchema = new Schema(
-    {
-      name: { type: String, required: true },
-      date: { type: Date, required: true },
-      time: { type: String, enum: ['Morning', 'Afternoon'], required: true },
-      type: { type: String, enum: ['Event', 'Meal'], required: true },
-      status: { 
-        type: String, 
-        enum: ['Pending','Ongoing', 'Done'], 
-        default: 'Pending',
-        required: true 
-      },
-      visibility: { 
-        type: String, 
-        enum: ['Public', 'Private'], 
-        default: 'Public',
-        required: true 
-      },
+  {
+    name: { type: String },
+    date: {
+      type: Date,
+      default: Date.now,
+      required: true,
     },
-    { timestamps: true }
-  );
-  
-  export const Event = mongoose.model('Event', EventSchema);
+    time: { type: String, enum: ["Morning", "Afternoon"], required: true },
+    type: { type: String, enum: ["Training", "Meal"], required: true },
+    status: {
+      type: String,
+      enum: ["Pending", "Ongoing", "Done"],
+      default: "Pending",
+      required: true,
+    },
+    visibility: {
+      type: String,
+      enum: ["Public", "Private"],
+      default: "Public",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+EventSchema.pre("save", function (next) {
+  // set the name with time and type
+  this.name = `${this.type} - ${this.time}`;
+});
+
+export const Event = mongoose.model("Event", EventSchema);
