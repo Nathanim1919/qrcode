@@ -1,18 +1,16 @@
-import {Event} from '../model/Event.model.js';
+import { Event } from "../model/Event.model.js";
 
 // Create a new event
 export const createEvent = async (req, res) => {
   try {
-    const { name, date, time, type } = req.body;
+    const { time, type } = req.body;
 
     // Validation (you can add more specific validation here)
-    if (!name || !date || !time || !type) {
-      return res.status(400).json({ message: 'Event name, date, and location are required.' });
+    if (!time || !type) {
+      return res.status(400).json({ message: "Event time and type required!" });
     }
 
     const newEvent = new Event({
-      name,
-      date,
       time,
       type,
     });
@@ -21,7 +19,9 @@ export const createEvent = async (req, res) => {
     return res.status(201).json(event);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: 'Server error. Could not create event.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not create event." });
   }
 };
 
@@ -32,12 +32,14 @@ export const getEventById = async (req, res) => {
 
     const event = await Event.findById(eventId);
     if (!event) {
-      return res.status(404).json({ message: 'Event not found.' });
+      return res.status(404).json({ message: "Event not found." });
     }
 
     return res.status(200).json(event);
   } catch (error) {
-    return res.status(500).json({ message: 'Server error. Could not fetch event.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not fetch event." });
   }
 };
 
@@ -47,10 +49,11 @@ export const getAllEvents = async (req, res) => {
     const events = await Event.find();
     return res.status(200).json(events);
   } catch (error) {
-    return res.status(500).json({ message: 'Server error. Could not fetch events.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not fetch events." });
   }
 };
-
 
 // List all events happening today with visibility set to public
 export const getPublicTodayEvents = async (req, res) => {
@@ -63,16 +66,16 @@ export const getPublicTodayEvents = async (req, res) => {
 
     const events = await Event.find({
       date: { $gte: startOfDay, $lte: endOfDay }, // Match dates within today's range
-      visibility: 'Public', // Match events with public visibility
+      visibility: "Public", // Match events with public visibility
     });
 
     return res.status(200).json(events);
   } catch (error) {
-    return res.status(500).json({ message: 'Server error. Could not fetch events.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not fetch events." });
   }
 };
-
-
 
 export const getAllTodayEvents = async (req, res) => {
   try {
@@ -86,15 +89,20 @@ export const getAllTodayEvents = async (req, res) => {
       date: { $gte: startOfDay, $lte: endOfDay }, // Match dates within today's range
     });
 
-    return res.status(200).json(
-      {data:events, message: "Today's events fetched successfully.", success: true}
-    );
+    return res
+      .status(200)
+      .json({
+        data: events,
+        message: "Today's events fetched successfully.",
+        success: true,
+      });
   } catch (error) {
     console.error("Error fetching today's events:", error);
-    return res.status(500).json({ message: "Server error. Could not fetch events." });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not fetch events." });
   }
 };
-
 
 // Update event details
 export const updateEvent = async (req, res) => {
@@ -109,12 +117,14 @@ export const updateEvent = async (req, res) => {
     );
 
     if (!updatedEvent) {
-      return res.status(404).json({ message: 'Event not found.' });
+      return res.status(404).json({ message: "Event not found." });
     }
 
     return res.status(200).json(updatedEvent);
   } catch (error) {
-    return res.status(500).json({ message: 'Server error. Could not update event.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not update event." });
   }
 };
 
@@ -125,15 +135,16 @@ export const deleteEvent = async (req, res) => {
 
     const deletedEvent = await Event.findByIdAndDelete(eventId);
     if (!deletedEvent) {
-      return res.status(404).json({ message: 'Event not found.' });
+      return res.status(404).json({ message: "Event not found." });
     }
 
-    return res.status(200).json({ message: 'Event deleted successfully.' });
+    return res.status(200).json({ message: "Event deleted successfully." });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error. Could not delete event.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not delete event." });
   }
 };
-
 
 // Set Event Visibility to Public or Private
 export const setEventVisibility = async (req, res) => {
@@ -148,11 +159,13 @@ export const setEventVisibility = async (req, res) => {
     );
 
     if (!updatedEvent) {
-      return res.status(404).json({ message: 'Event not found.' });
+      return res.status(404).json({ message: "Event not found." });
     }
 
     return res.status(200).json(updatedEvent);
   } catch (error) {
-    return res.status(500).json({ message: 'Server error. Could not update event visibility.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Could not update event visibility." });
   }
 };

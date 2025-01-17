@@ -8,8 +8,16 @@ const EventSchema = new Schema(
       default: Date.now,
       required: true,
     },
-    time: { type: String, enum: ["Morning", "Afternoon"], required: true },
-    type: { type: String, enum: ["Training", "Meal"], required: true },
+    time: { 
+      type: String, 
+      enum: ["Morning", "Afternoon", "Evening", "Night"], 
+      required: true 
+    },
+    type: { 
+      type: String, 
+      enum: ["Training", "Meal", "Conference", "Workshop", "Seminar"], 
+      required: true 
+    },
     status: {
       type: String,
       enum: ["Pending", "Ongoing", "Done"],
@@ -29,6 +37,7 @@ const EventSchema = new Schema(
 EventSchema.pre("save", function (next) {
   // set the name with time and type
   this.name = `${this.type} - ${this.time}`;
+  next();
 });
 
 export const Event = mongoose.model("Event", EventSchema);
