@@ -5,7 +5,6 @@ import { BASE_URL } from "../constants/config";
 import { FaCheckCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
-import { RiRefreshLine } from "react-icons/ri";
 
 interface UserDetailCardProps {
   userAttendance: any[];

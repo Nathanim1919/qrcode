@@ -5,13 +5,20 @@ import { Link } from "react-router-dom";
 import { AiOutlineCalendar, AiOutlineClockCircle } from "react-icons/ai";
 import { MdOutlineEventNote } from "react-icons/md";
 import { FiArrowLeft } from "react-icons/fi";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { IoIosMore } from "react-icons/io";
+
+
 
 // Event Card Component
 const EventCard: React.FC<{ event: any }> = ({ event }) => {
   return (
     <div className="w-full  bg-white shadow-lg rounded-lg p-4 flex flex-col items-start hover:shadow-xl transition-shadow">
-      <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+      <h3 className="text-lg flex items-center justify-between font-bold text-gray-800 w-full gap-2">
+        <span className="flex items-center gap-1">
         <MdOutlineEventNote className="text-blue-500" /> {event.name}
+        </span>
+        <IoIosMore className="w-6 h-6 grid place-items-center hover:bg-gray-200 rounded-full cursor-pointer"/>
       </h3>
       <p className="text-gray-500 text-sm mt-2 flex items-center gap-2">
         <AiOutlineCalendar className="text-blue-500" />{" "}
@@ -23,6 +30,7 @@ const EventCard: React.FC<{ event: any }> = ({ event }) => {
       <p className="mt-2 text-gray-700 text-sm">
         <span className="font-semibold">Type:</span> {event.type}
       </p>
+      <RiDeleteBin5Line className="self-end w-6 p-[2px] h-6 grid place-items-center rounded-full hover:bg-gray-200 cursor-pointer"/>
     </div>
   );
 };
@@ -33,7 +41,6 @@ export const EventPage: React.FC = () => {
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
   const [eventData, setEventData] = useState<any>({
     name: "",
-    date: "",
     time: "",
     type: "",
   });
@@ -44,7 +51,7 @@ export const EventPage: React.FC = () => {
       const response = await axiosInstance.post(`/events`, eventData);
       setAvailableEvents([...availableEvents, response.data]);
       setCreateEvent(false);
-      setEventData({ name: "", date: "", time: "", type: "" });
+      setEventData({ name: "", time: "", type: "" });
     } catch (error) {
       console.error(error);
     }
@@ -89,19 +96,6 @@ export const EventPage: React.FC = () => {
               value={eventData.name}
               onChange={(e) =>
                 setEventData({ ...eventData, name: e.target.value })
-              }
-              required
-            />
-            <label htmlFor="date" className="text-sm font-semibold text-gray-600">
-              Date
-            </label>
-            <input
-              type="date"
-              id="date"
-              className="w-full border border-gray-300 p-2 rounded-lg mt-1 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={eventData.date}
-              onChange={(e) =>
-                setEventData({ ...eventData, date: e.target.value })
               }
               required
             />

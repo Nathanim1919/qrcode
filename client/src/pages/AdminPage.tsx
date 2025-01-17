@@ -100,7 +100,7 @@ const AdminPage: React.FC = () => {
                 <h3 className="text-lg font-semibold mb-2 text-gray-800">{event.name}</h3>
 
                 <p className="text-gray-700 flex items-center mb-2">
-                  <FaRegCalendarAlt className="mr-2 text-blue-600" /> {event.date}
+                  <FaRegCalendarAlt className="mr-2 text-blue-600" />  {new Date(event.date).toLocaleDateString()}
                 </p>
 
                 <p className="text-gray-700 flex items-center mb-2">
