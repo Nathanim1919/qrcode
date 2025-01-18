@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import UserDetailCard from "../components/UserDetailCard";
 import axiosInstance from "../constants/config";
 import { Link } from "react-router-dom";
 import { IEvent } from "../interface/IEvent";
@@ -18,7 +17,8 @@ interface IUser {
 const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [events, setEvents] = useState<IEvent[]>([]);
-  const [userAttendance, setUserAttendance] = useState<any[]>([]);
+  const [attendanceCounts, setAttendanceCounts] = useState<{ [key: string]: number }>({});
+
 
   const today = new Date();
   const formattedFullDate = today.toLocaleDateString("en-US", {
@@ -53,11 +53,30 @@ const AdminPage: React.FC = () => {
   const fetchEvents = async () => {
     try {
       const res = await axiosInstance.get(`/events/today`);
-      setEvents(res.data.data);
+      const events = res.data.data;
+      setEvents(events);
+  
+      // Fetch attendance counts for each event
+      const counts = await Promise.all(
+        events.map(async (event:IEvent) => {
+          const countRes = await axiosInstance.get(`/attendance/count/${event._id}`);
+          return { eventId: event._id, count: countRes.data };
+        })
+      );
+  
+      // Convert the array of counts into an object with eventId as the key
+      const countsObj = counts.reduce((acc, { eventId, count }) => {
+        acc[eventId] = count;
+        return acc;
+      }, {});
+      setAttendanceCounts(countsObj);
     } catch (error) {
-      console.error("Failed to fetch events", error);
+      console.error("Failed to fetch events or attendance counts", error);
     }
   };
+  
+
+
 
   useEffect(() => {
     fetchUsers();
@@ -126,6 +145,13 @@ const AdminPage: React.FC = () => {
                     Set {event.visibility === "Public" ? "Private" : "Public"}
                   </button>
                 </div>
+
+                <div className="count p-2 font-bold text-gray-800">
+                  <p>
+                    {attendanceCounts[event._id] !== undefined ? attendanceCounts[event._id] : 'Loading...'}/ {users.length} attendees
+                  </p>
+                </div>
+
 
                 <p className="text-gray-700 flex items-center mb-2">
                   <FaRegCalendarAlt className="mr-2 text-blue-600" />{" "}
