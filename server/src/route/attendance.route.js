@@ -5,7 +5,8 @@ import {
   checkUserAttendance,
   getAllAttendance,
   getUserAttendance,
-  getUserAttendanceByQrCode
+  getUserAttendanceByQrCode,
+  countEventAttendance
 } from '../controller/attendance.controller.js';
 
 const router = Router();
@@ -16,6 +17,9 @@ router.get('/', getAllAttendance);
 
 // Check if a user has attended
 router.get('/check', checkUserAttendance);
+
+// count event attendance
+router.get('/count/:eventId', countEventAttendance);
 
 // Get all attendance records
 // Get attendance for a specific event and type

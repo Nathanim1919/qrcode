@@ -83,7 +83,6 @@ export const checkUserAttendance = async (req, res) => {
 
 //Get user attendance
 export const getUserAttendance = async (req, res) => {
-  console.log("getUserAttendance")
   try {
     const { userId } = req.params;
 
@@ -98,6 +97,23 @@ export const getUserAttendance = async (req, res) => {
     return res.status(500).json({ message: 'Server error. Could not fetch attendance.' });
   }
 };
+
+
+export const countEventAttendance = async (req, res) => {
+  try {
+    const { eventId } = req.params;
+
+    if (!eventId) {
+      return res.status(400).json({ message: 'Event ID is required.' });
+    }
+
+    const attendanceList = await Attendance.find({ eventId }).countDocuments();
+    return res.status(200).json(attendanceList);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Server error. Could not fetch attendance.' });
+  }
+}
 
 
 export const getUserAttendanceByQrCode = async (req, res) => {

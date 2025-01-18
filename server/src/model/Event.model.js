@@ -36,7 +36,7 @@ const EventSchema = new Schema(
 
 EventSchema.pre("save", function (next) {
   // set the name with time and type
-  this.name = `${this.type} - ${this.time}`;
+  this.name = `${this.time} - ${this.type}`;
   next();
 });
 
